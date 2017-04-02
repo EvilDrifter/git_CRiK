@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="CRiC_Meteo.Elements.uc_DataBase"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CRiC_Meteo.Elements"
+             mc:Ignorable="d" 
+             d:DesignHeight="550" d:DesignWidth="300">
+    <Grid>
+        <StackPanel x:Name="MySQL_stackPanel" Margin="8">
+            <Label>Обработка метеоданных и MySQL</Label>
+            <Label>Адрес папки с погодой:</Label>
+            <TextBox Name="txb_MainFolderWithMonth"></TextBox>
+            <Button Name="bnt_ShowMonthFolders" Margin="20" Width="150" Height="25" Content="Показать месяцы в папке"></Button>
+            <ListView Name="lv_eachMonth" MinHeight="100" MaxHeight="300">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Выбор" Width="50">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Tag="{Binding pathToMonth}" IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Path=IsSelected}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Anrede" Width="250" DisplayMemberBinding="{Binding pathToMonth}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Label>Год:</Label>
+            <TextBox Name="txb_YearForMeteo" HorizontalAlignment="Left" Margin="5" Width="50"></TextBox>
+            <Button Name="bnt_StartProcessWithMySQL" Margin="20" Width="150" Height="25" Content="Обработать выделенные"></Button>
+            <Label>Считывание HTML файлов</Label>
+            <Label Name="lb_htmlProgress">Выполнено:</Label>
+            <ProgressBar Name="prBar_readingHTML" Height="25" Foreground="#FF01D328"/>
+            <Label>Обновление Базы данных:</Label>
+            <Label Name="lb_dbProgress">Выполнено:</Label>
+            <ProgressBar Name="prBar_updatingMySQL" Height="25"></ProgressBar>
+        </StackPanel>
+    </Grid>
+</UserControl>
