@@ -137,10 +137,11 @@ namespace CRiC_Meteo.Models
     [Serializable]
     public class MySQLDataBaseConfig
     {
-        public string msql_server;
-        public string msql_userId;
-        public string msql_password;
-        public string msql_DB_name;
+        private string fileXMLName = "db_mysql_config.xml";
+        public string msql_server;      //localhost
+        public string msql_userId;      //root
+        public string msql_password;    //123456
+        public string msql_DB_name;     //pogodat
 
         public MySQLDataBaseConfig(string msql_server, string msql_userId, string msql_password, string msql_DB_name)
         {
@@ -149,20 +150,13 @@ namespace CRiC_Meteo.Models
             this.msql_server = msql_server;
             this.msql_userId = msql_userId;
         }
-        public MySQLDataBaseConfig()
-        {
-
-        }
+        public MySQLDataBaseConfig() {}
 
         public void ReadXMLFile()
         {
             if (!File.Exists("db_mysql_config.xml"))
             {
                 UpdateXMLFIle(new MySQLDataBaseConfig("localhost", "root", "123456", "pogodat"));
-                //conn_string.Server = "localhost";
-                //conn_string.UserID = "root";
-                //conn_string.Password = "123456";
-                //conn_string.Database = DataBaseName;
             }
 
             XmlSerializer formatter = new XmlSerializer(typeof(MySQLDataBaseConfig));
@@ -191,9 +185,21 @@ namespace CRiC_Meteo.Models
     [Serializable]
     public class BasseinFrozingMelting: WR_Xml
     {
+        private string fileXMLName = "FrozingMelting.xml";
         public int basseinIndex;
         public List<double> meltingT, meltingV;
         public List<double> frozintT, frozingPer;
+
+        public void UpdateXML(List<BasseinFrozingMelting> frmel)
+        {
+            base.UpdateXMLFile(frmel, fileXMLName);
+        }
+        public List<BasseinFrozingMelting> ReadXML()
+        {
+            List<BasseinFrozingMelting> frmel = new List<BasseinFrozingMelting>();
+            base.ReadXMLFile(ref frmel, fileXMLName);
+            return frmel;
+        }
     }
 
     public abstract class WR_Xml
