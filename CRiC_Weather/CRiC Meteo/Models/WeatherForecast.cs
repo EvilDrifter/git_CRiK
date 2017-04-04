@@ -50,7 +50,7 @@ namespace CRiC_Meteo.Models
 
             //Обновление MySQL Базы данных, в скобках - название БД и итерфейс для взаимодействия с главным окном
             MySQLDataBaseConfig msConfig = new MySQLDataBaseConfig();
-            msConfig.ReadXMLFile();
+            msConfig = msConfig.ReadXML();
             MySQL_Worker msqlW = new MySQL_Worker(msConfig, presInterface);
             t = Task.Run(() => msqlW.UpdateDataBaseFromMeteoStationData(List_MeteoStation, 12));    //Список метеостанций для обработки и количество потоков для работы (желательно <=12)
             Task.WaitAll(t);

@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ProgrammConfig>
-  <FolderWithData>d:\weatherD\2017\</FolderWithData>
-  <Year>2017</Year>
-</ProgrammConfig>
+<?xml version="1.0"?>
+<ConfigClass xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <FolderWithDataWay>Folder with months</FolderWithDataWay>
+  <curYearForCalc>9999</curYearForCalc>
+</ConfigClass>

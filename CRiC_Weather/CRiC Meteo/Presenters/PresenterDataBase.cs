@@ -37,17 +37,17 @@ namespace CRiC_Meteo.Presenters
         public void LoadConfigFile()
         {
             configFile = new ConfigClass();
-            configFile.readXMLConfigFile();
+            configFile = configFile.ReadXML();
             FolderWithData = configFile.FolderWithDataWay;
             YearToCalc = configFile.curYearForCalc.ToString();
         }
         public void UpdateConfigFile()
         {
-            if (configFile.FolderWithDataWay != FolderWithData || configFile.curYearForCalc.ToString() != YearToCalc)
+            if (configFile.FolderWithDataWay != interfaceUC_DB.GetFolderWayFromUserControl || configFile.curYearForCalc.ToString() != interfaceUC_DB.GetYearToCalcFromUserControl)
             {
-                configFile.FolderWithDataWay = FolderWithData;
-                configFile.curYearForCalc = Convert.ToInt32(YearToCalc);
-                configFile.makeXMLConfigFile();
+                configFile.FolderWithDataWay = interfaceUC_DB.GetFolderWayFromUserControl;
+                configFile.curYearForCalc = Convert.ToInt32(interfaceUC_DB.GetYearToCalcFromUserControl);
+                configFile.UpdateXML(configFile);
             }
         }
 

@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace CRiC_Meteo.Models
 {
     [Serializable]
-    class ConfigClass: WR_Xml
+    public class ConfigClass: WR_Xml
     {
         private string fileXMLName = "config.xml";
         public string FolderWithDataWay { get; set; }

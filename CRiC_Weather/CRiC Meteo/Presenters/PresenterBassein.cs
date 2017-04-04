@@ -30,20 +30,9 @@ namespace CRiC_Meteo.Presenters
 
         private List<MeteoStaionWMO_index> openXML()
         {
-            if (System.IO.File.Exists("bassein.xml"))
-            {
-                lms = MeteoStaionWMO_index.ReadXMLFile();
-            }
-            else if(!System.IO.File.Exists("bassein.xml"))
-            {
-                lms = MeteoStaionWMO_index.ReadCSVFile(@"d:\CRiK\.net\CRiC_Weather\Bassein.csv");
-                MeteoStaionWMO_index.UpdateXMLFile(lms);
-            }
-            else
-	        {
-                MessageBox.Show("File <bassein.xml> or <bassein.csv> did not find. ");
-            }
-
+            List<MeteoStaionWMO_index> lms = new List<MeteoStaionWMO_index>();
+            MeteoStaionWMO_index t = new MeteoStaionWMO_index();
+            lms = t.ReadXML();
             return lms;
         }
 
@@ -56,7 +45,7 @@ namespace CRiC_Meteo.Presenters
             if (ms!=null)
             {
                 msConfig = new MySQLDataBaseConfig();
-                msConfig.ReadXMLFile();
+                msConfig = msConfig.ReadXML();
                 msqlW = new MySQL_Worker(msConfig);
                 msqlW_byIndex = new DataTable();
                 try

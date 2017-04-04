@@ -21,10 +21,19 @@ namespace CRiC_Meteo.Elements
     {
         void UpdateProgressBar_HTML(int value_max);
         void UpdateProgressBar_SQL(int value_max);
+        string GetFolderWayFromUserControl { get;}
+        string GetYearToCalcFromUserControl { get;}
     }
     public partial class uc_DataBase : UserControl, interface_UC_DataBase
     {
         PresenterDataBase dbPresenter;
+
+        public string GetFolderWayFromUserControl
+        { get { return txb_MainFolderWithMonth.Text; } }
+
+        public string GetYearToCalcFromUserControl
+        { get { return txb_YearForMeteo.Text; } }
+
         public uc_DataBase(PresenterDataBase dbPresenter, ref interface_UC_DataBase k)
         {
             InitializeComponent();
