@@ -112,5 +112,25 @@ namespace CRiC_Meteo.Elements
                 return;
             }
         }
+
+        private void cmb_FirstLoad(object sender, RoutedEventArgs e)
+        {
+            List<string> dataForCmb = new List<string>();
+            dataForCmb.Add("January");
+            dataForCmb.Add("February");
+            dataForCmb.Add("March");
+            dataForCmb.Add("April");
+            dataForCmb.Add("May");
+            dataForCmb.Add("June");
+            dataForCmb.Add("July");
+            dataForCmb.Add("August");
+            dataForCmb.Add("September");
+            dataForCmb.Add("October");
+            dataForCmb.Add("November");
+            dataForCmb.Add("December");
+
+            cmb_Months.ItemsSource = dataForCmb;
+            cmb_Months.SelectedIndex = 0;
+        }
     }
 }

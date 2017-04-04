@@ -33,7 +33,6 @@ namespace CRiC_Meteo.Presenters
             stPanel.Children.Add(new uc_DataBase(this, ref interfaceUC_DB));           
         }
 
-
         public void LoadConfigFile()
         {
             configFile = new ConfigClass();

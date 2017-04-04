@@ -41,7 +41,7 @@
             <ProgressBar Name="prBar_updatingMySQL" Height="25"></ProgressBar>
         </StackPanel>
         <StackPanel Margin="8" Grid.Column="1">
-            <ComboBox Name="cmb_Months" Margin="10" Width="150" Height="20" HorizontalAlignment="Left"></ComboBox>
+            <ComboBox Name="cmb_Months" Margin="10" Width="150" Height="25" HorizontalAlignment="Left" Loaded="cmb_FirstLoad"></ComboBox>
             <TextBox Name="txtYearToDownload" Margin="10" Width="50" Height="20" HorizontalAlignment="Left"></TextBox>
             <TextBox Name="txt_FolderToDownload" Margin="10" Height="20"></TextBox>
             <Button Name="btn_DownloadMeteoData" Width="150" Height="25" HorizontalAlignment="Left" Margin="10" Content="Download Meteo Data"></Button>
