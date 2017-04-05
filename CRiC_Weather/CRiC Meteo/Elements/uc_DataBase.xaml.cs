@@ -21,10 +21,19 @@ namespace CRiC_Meteo.Elements
     {
         void UpdateProgressBar_HTML(int value_max);
         void UpdateProgressBar_SQL(int value_max);
+        string GetFolderWayFromUserControl { get;}
+        string GetYearToCalcFromUserControl { get;}
     }
     public partial class uc_DataBase : UserControl, interface_UC_DataBase
     {
         PresenterDataBase dbPresenter;
+
+        public string GetFolderWayFromUserControl
+        { get { return txb_MainFolderWithMonth.Text; } }
+
+        public string GetYearToCalcFromUserControl
+        { get { return txb_YearForMeteo.Text; } }
+
         public uc_DataBase(PresenterDataBase dbPresenter, ref interface_UC_DataBase k)
         {
             InitializeComponent();
@@ -102,6 +111,26 @@ namespace CRiC_Meteo.Elements
                 prBar_updatingMySQL.Dispatcher.Invoke(new Delegate_UpdateProgressBar(UpdateProgressBar_SQL), valueMax);
                 return;
             }
+        }
+
+        private void cmb_FirstLoad(object sender, RoutedEventArgs e)
+        {
+            List<string> dataForCmb = new List<string>();
+            dataForCmb.Add("January");
+            dataForCmb.Add("February");
+            dataForCmb.Add("March");
+            dataForCmb.Add("April");
+            dataForCmb.Add("May");
+            dataForCmb.Add("June");
+            dataForCmb.Add("July");
+            dataForCmb.Add("August");
+            dataForCmb.Add("September");
+            dataForCmb.Add("October");
+            dataForCmb.Add("November");
+            dataForCmb.Add("December");
+
+            cmb_Months.ItemsSource = dataForCmb;
+            cmb_Months.SelectedIndex = 0;
         }
     }
 }

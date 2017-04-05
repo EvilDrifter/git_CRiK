@@ -9,19 +9,17 @@ using System.Xml.Serialization;
 
 namespace CRiC_Meteo.Models
 {
-    class ConfigClass  //https://habrahabr.ru/post/24673/
+    [Serializable]
+    public class ConfigClass: WR_Xml
     {
+        private string fileXMLName = "config.xml";
         public string FolderWithDataWay { get; set; }
         public int curYearForCalc { get; set; }
-        string fileXML = "config.xml";
 
         public ConfigClass(string way, int year)
         {
-            if (way.Length > 5) { FolderWithDataWay = way; }
-            else { FolderWithDataWay = "Suddenly missing an important folder"; }
-
-            if (year > 1900) { curYearForCalc = year; }
-            else { curYearForCalc = 9999; }
+            FolderWithDataWay = way;
+            curYearForCalc = year;
         }
         public ConfigClass()
         {
@@ -29,63 +27,36 @@ namespace CRiC_Meteo.Models
             curYearForCalc = 9999;
         }
 
-        public bool makeXMLConfigFile()
+        public void UpdateXML(ConfigClass mainConfig)
         {
-            bool result = false;
-            try
-            {
-                XDocument doc = new XDocument(new XElement("ProgrammConfig",
-                new XElement("FolderWithData", FolderWithDataWay),
-                new XElement("Year", curYearForCalc)));
-                doc.Save(fileXML);
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            return result;
+            base.UpdateXMLFile(mainConfig, fileXMLName);
         }
-        public bool readXMLConfigFile()
+
+        public ConfigClass ReadXML()
         {
-            bool result = false;
-
-            try
+            ConfigClass mainConfig = new ConfigClass();
+            if (!File.Exists(fileXMLName))
             {
-                XDocument doc = XDocument.Load(fileXML);
-                foreach (XElement el in doc.Root.Elements())
-                {
-                    if (el.Name == "FolderWithData")
-                    {
-                        FolderWithDataWay = Convert.ToString(el.Value);
-                    }
-                    else if (el.Name == "Year")
-                    {
-                        curYearForCalc = Convert.ToInt32(el.Value);
-                    }
-
-                }
-
-
-                result = true;
+                UpdateXML(new ConfigClass("Folder with months", 9999));
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            return result;
+
+            base.ReadXMLFile(ref mainConfig, fileXMLName);
+
+            this.FolderWithDataWay = mainConfig.FolderWithDataWay;
+            this.curYearForCalc = mainConfig.curYearForCalc;
+
+            return mainConfig;
         }
     }
 
     [Serializable]
-    public class MeteoStaionWMO_index
+    public class MeteoStaionWMO_index: WR_Xml
     {
+        private string fileXMLName = "bassein.xml";
         public string indexWMO;
         public string Name_meteoSta;
         public string basseinIndex;
         public string location_Xm, location_Ym;
-        bool hasBeenChanged;
 
         public MeteoStaionWMO_index(string index, string name, string bassein, string Xm, string Ym)
         {
@@ -94,14 +65,28 @@ namespace CRiC_Meteo.Models
             this.basseinIndex = bassein;
             this.location_Xm = Xm;
             this.location_Ym = Ym;
-            hasBeenChanged = true;
         }
-        public MeteoStaionWMO_index()
+        public MeteoStaionWMO_index() {}
+
+        public void UpdateXML(List<MeteoStaionWMO_index> wmoList)
         {
-            hasBeenChanged = false;
+            base.UpdateXMLFile(wmoList, fileXMLName);
+        }
+        public List<MeteoStaionWMO_index> ReadXML()
+        {
+            List<MeteoStaionWMO_index> wmoList = new List<MeteoStaionWMO_index>();
+            if (!File.Exists(fileXMLName))
+            {
+                wmoList = ReadCSVFile(@"d:\GeekBrains\git_CRiK\CRiC_Weather\Bassein.csv");
+            }
+
+            wmoList = new List<MeteoStaionWMO_index>();
+            base.ReadXMLFile(ref wmoList, fileXMLName);
+
+            return wmoList;
         }
 
-        public static List<MeteoStaionWMO_index> ReadCSVFile(string wayToFile)
+        private List<MeteoStaionWMO_index> ReadCSVFile(string wayToFile)
         {
             string[] fileAll = File.ReadAllLines(wayToFile);
             string[] curLine;
@@ -113,29 +98,10 @@ namespace CRiC_Meteo.Models
             }
             return wmo;
         }
-
-        public static void UpdateXMLFile(List<MeteoStaionWMO_index> wmoList)
-        {
-            XmlSerializer formatter = new XmlSerializer(typeof(List<MeteoStaionWMO_index>));
-            using (FileStream fs = new FileStream("bassein.xml", FileMode.OpenOrCreate))
-            {
-                formatter.Serialize(fs, wmoList);
-            }
-        }
-        public static List<MeteoStaionWMO_index> ReadXMLFile()
-        {
-            XmlSerializer formatter = new XmlSerializer(typeof(List<MeteoStaionWMO_index>));
-            using (FileStream fs = new FileStream("bassein.xml", FileMode.OpenOrCreate))
-            {
-                List<MeteoStaionWMO_index> wmo = (List<MeteoStaionWMO_index>)formatter.Deserialize(fs);
-                return wmo;
-            }
-
-        }
     }
 
     [Serializable]
-    public class MySQLDataBaseConfig
+    public class MySQLDataBaseConfig: WR_Xml
     {
         private string fileXMLName = "db_mysql_config.xml";
         public string msql_server;      //localhost
@@ -152,33 +118,28 @@ namespace CRiC_Meteo.Models
         }
         public MySQLDataBaseConfig() {}
 
-        public void ReadXMLFile()
+
+        public void UpdateXML(MySQLDataBaseConfig msConfig)
         {
-            if (!File.Exists("db_mysql_config.xml"))
+            base.UpdateXMLFile(msConfig, fileXMLName);
+        }
+        public MySQLDataBaseConfig ReadXML()
+        {
+            MySQLDataBaseConfig msConfig = new MySQLDataBaseConfig();
+            if (!File.Exists(fileXMLName))
             {
-                UpdateXMLFIle(new MySQLDataBaseConfig("localhost", "root", "123456", "pogodat"));
+                UpdateXML(new MySQLDataBaseConfig("localhost", "root", "123456", "pogoda"));
             }
 
-            XmlSerializer formatter = new XmlSerializer(typeof(MySQLDataBaseConfig));
-            using (FileStream fs = new FileStream("db_mysql_config.xml", FileMode.OpenOrCreate))
-            {
-                MySQLDataBaseConfig wmo = (MySQLDataBaseConfig)formatter.Deserialize(fs);
-                this.msql_DB_name = wmo.msql_DB_name;
-                this.msql_password = wmo.msql_password;
-                this.msql_server = wmo.msql_server;
-                this.msql_userId = wmo.msql_userId;
-            }
-        }
-        public void UpdateXMLFIle(MySQLDataBaseConfig msConfig)
-        {
-            XmlSerializer formatter = new XmlSerializer(typeof(MySQLDataBaseConfig));
-            if (msConfig!=this || !File.Exists("db_mysql_config.xml"))
-            {
-                using (FileStream fs = new FileStream("db_mysql_config.xml", FileMode.OpenOrCreate))
-                {
-                    formatter.Serialize(fs, msConfig);
-                }
-            }
+            base.ReadXMLFile(ref msConfig, fileXMLName);
+
+            this.msql_DB_name = msConfig.msql_DB_name;
+            this.msql_password = msConfig.msql_password;
+            this.msql_server = msConfig.msql_server;
+            this.msql_userId = msConfig.msql_userId;
+
+
+            return msConfig;
         }
     }
 
