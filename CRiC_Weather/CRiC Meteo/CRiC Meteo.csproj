@@ -84,6 +84,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Elements\uc_SnowCalc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -98,6 +102,9 @@
     <Compile Include="Elements\uc_MeteoStation.xaml.cs">
       <DependentUpon>uc_MeteoStation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Elements\uc_SnowCalc.xaml.cs">
+      <DependentUpon>uc_SnowCalc.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -107,9 +114,11 @@
     <Compile Include="Models\ConfigClass.cs" />
     <Compile Include="Models\MeteoStation.cs" />
     <Compile Include="Models\MySQL_DataBase.cs" />
+    <Compile Include="Models\OxyPlot_Funk.cs" />
     <Compile Include="Models\WeatherForecast.cs" />
     <Compile Include="Presenters\PresenterBassein.cs" />
     <Compile Include="Presenters\PresenterDataBase.cs" />
+    <Compile Include="Presenters\Presenter_OxyPlot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

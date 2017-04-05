@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="CRiC_Meteo.Elements.uc_SnowCalc"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:oxy="http://oxyplot.org/wpf"
+             xmlns:local="clr-namespace:CRiC_Meteo.Elements"
+             xmlns:simpleDemo="clr-namespace:CRiC_Meteo.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <UserControl.DataContext>
+        <simpleDemo:OxyPlot_Funk />
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="250"></RowDefinition>
+                <RowDefinition MinHeight="250"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <ComboBox Name="cmb_basseinIndex" Width="50" Margin="5" HorizontalAlignment="Left"/>
+                <ComboBox Name="cmb_FrozingMelting" Width="50" Margin="5" HorizontalAlignment="Left"></ComboBox>
+                <DataGrid Name="grid_FrMelFunk" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Binding="{Binding TempVal}"></DataGridTextColumn>
+                        <DataGridTextColumn Width="*" Binding="{Binding ValFromTemp}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+            <oxy:PlotView Grid.Row="1" Model="{Binding Model}" MinWidth="100"/>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="1" Name="grid_SnowCalc" AutoGenerateColumns="False">
+
+            </DataGrid>
+        </Grid>
+        
+    </Grid>
+</UserControl>
