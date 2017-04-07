@@ -8,40 +8,27 @@
              xmlns:simpleDemo="clr-namespace:CRiC_Meteo.Models"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
-    <UserControl.DataContext>
-        <simpleDemo:OxyPlot_Funk />
-    </UserControl.DataContext>
-    <Grid>
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition MinHeight="250"></RowDefinition>
-                <RowDefinition MinHeight="250"></RowDefinition>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0">
-                <ComboBox Name="cmb_basseinIndex" Width="50" Margin="5" HorizontalAlignment="Left"/>
-                <ComboBox Name="cmb_FrozingMelting" Width="50" Margin="5" HorizontalAlignment="Left"></ComboBox>
-                <DataGrid Name="grid_FrMelFunk" AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Width="*" Binding="{Binding TempVal}"></DataGridTextColumn>
-                        <DataGridTextColumn Width="*" Binding="{Binding ValFromTemp}"></DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
-            <oxy:PlotView Grid.Row="1" Model="{Binding Model}" MinWidth="100"/>
-        </Grid>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <DataGrid Grid.Row="1" Name="grid_SnowCalc" AutoGenerateColumns="False">
-
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <ComboBox Name="cmb_basseinIndex" Width="150" Margin="5" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>
+            <ComboBox Name="cmb_FrozingMelting" Width="150" Margin="5" HorizontalAlignment="Left" HorizontalContentAlignment="Center"></ComboBox>
+            <DataGrid Name="grid_FrMelFunk" AutoGenerateColumns="False" ItemsSource="{Binding}" MaxWidth="200" Margin="5" HorizontalAlignment="Center">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="*" Binding="{Binding Temperature}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="*" Binding="{Binding ValueByTemp}"></DataGridTextColumn>
+                </DataGrid.Columns>
             </DataGrid>
-        </Grid>
-        
+        </StackPanel>
+        <oxy:PlotView Grid.Row="1" Grid.Column="0" Model="{Binding Model}" Name="oxyPlot1" VerticalAlignment="Stretch" Background="Brown"/>
+        <oxy:PlotView Grid.Row="0" Grid.Column="1" Model="{Binding Model}" Name="oxyPlot2" MinWidth="100"/>
+        <DataGrid Grid.Row="1" Grid.Column="1" Name="grid_SnowCalc" AutoGenerateColumns="False"></DataGrid>
     </Grid>
 </UserControl>
