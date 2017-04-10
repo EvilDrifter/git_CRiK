@@ -24,10 +24,10 @@ namespace CRiC_Meteo.Presenters
                 }
         }
 
-        public void ShowUserControl(StackPanel stPanel)
+        public void ShowUserControl(ContentControl cc)
         {
-            stPanel.Children.Clear();
-            stPanel.Children.Add(new uc_SnowCalc(this));
+            cc.Content = null;
+            cc.Content = new uc_SnowCalc(this);
         }
     }
 }

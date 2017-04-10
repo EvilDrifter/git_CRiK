@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:oxy="http://oxyplot.org/wpf"
-             xmlns:local="clr-namespace:CRiC_Meteo.Elements"
-             xmlns:simpleDemo="clr-namespace:CRiC_Meteo.Models"
+             xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
     <Grid ShowGridLines="True">
@@ -27,7 +25,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-        <oxy:PlotView Grid.Row="1" Grid.Column="0" Model="{Binding Model}" Name="oxyPlot1" VerticalAlignment="Stretch" Background="Brown"/>
+        <oxy:PlotView Model="{Binding Model}" Name="oxyPlot1" Grid.Column="0" Grid.Row="1"/>
         <oxy:PlotView Grid.Row="0" Grid.Column="1" Model="{Binding Model}" Name="oxyPlot2" MinWidth="100"/>
         <DataGrid Grid.Row="1" Grid.Column="1" Name="grid_SnowCalc" AutoGenerateColumns="False"></DataGrid>
     </Grid>

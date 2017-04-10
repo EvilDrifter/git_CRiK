@@ -15,7 +15,11 @@
         </Storyboard>
     </Window.Resources>
     <Grid>
-        <StackPanel Panel.ZIndex="2" Name="pnlLeftMenu" Orientation="Horizontal" HorizontalAlignment="Left" Margin="-150,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Panel.ZIndex="2" Name="pnlLeftMenu" Orientation="Horizontal" HorizontalAlignment="Left" Margin="-150,0,0,0" Grid.RowSpan="2">
             <Border BorderBrush="#AF1719" BorderThickness="1" Width="150" Background="#4C808080" >
                 <Grid ShowGridLines="True">
                     <Grid.RowDefinitions>
@@ -32,8 +36,8 @@
                 <Button Name="btnLeftMenuHide" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Height="25" Content="&lt;-" Visibility="Hidden"/>
                 <Button Name="btnLeftMenuShow" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Height="25" Content="-&gt;"/>
             </Grid>
-
         </StackPanel>
-        <StackPanel Name="stP_MyControls"></StackPanel>
+        <!--<StackPanel Name="stP_MyControls" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></StackPanel>-->
+        <ContentControl Name="MyUserControl" Grid.RowSpan="2"></ContentControl>
     </Grid>
 </Window>

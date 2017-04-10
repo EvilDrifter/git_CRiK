@@ -26,11 +26,11 @@ namespace CRiC_Meteo.Presenters
         public string YearToCalc { get; set; }
         #endregion Данные
 
-        public void ShowUserControl(StackPanel stPanel)
+        public void ShowUserControl(ContentControl cc)
         {
-            stPanel.Children.Clear();
+            cc.Content = null;
             LoadConfigFile();
-            stPanel.Children.Add(new uc_DataBase(this, ref interfaceUC_DB));           
+            cc.Content = new uc_DataBase(this, ref interfaceUC_DB);        
         }
 
         public void LoadConfigFile()

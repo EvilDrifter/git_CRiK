@@ -21,11 +21,11 @@ namespace CRiC_Meteo.Presenters
         List<MeteoStaionWMO_index> lms { get; set; }
         interface_UC_MeteoStation inf_Ms;
 
-        public void ShowUserControl(StackPanel stPanel)
+        public void ShowUserControl(ContentControl cc)
         {
-            stPanel.Children.Clear();
+            cc.Content = null;
             openXML();
-            stPanel.Children.Add(new uc_MeteoStation(this, lms, ref inf_Ms));
+            cc.Content = new uc_MeteoStation(this, lms, ref inf_Ms);
         }
 
         private List<MeteoStaionWMO_index> openXML()
