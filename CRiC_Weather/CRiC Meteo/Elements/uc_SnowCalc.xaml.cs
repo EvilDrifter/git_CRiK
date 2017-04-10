@@ -4,14 +4,21 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Shapes;
+using System.Windows.Media.Animation;
+using System.Windows;
+using System.Collections.Generic;
 
 namespace CRiC_Meteo.Elements
 {
     enum FunkFrozingMelting { накопление, таяние };
 
-    public interface interface_OxyPlot
+    public interface interface_UC_SnowCalc
     {
-        void UpdateFrozingMelting();
+        string selectedBassein { get; }
+        string selectedIndexSta { get; }
+        DateTime begTime { get; }
+        DateTime endTime { get; }
     }
 
     public class TempValue
@@ -41,23 +48,100 @@ namespace CRiC_Meteo.Elements
         public string NameSeries;
     }
 
-    public partial class uc_SnowCalc : UserControl
+    public partial class uc_SnowCalc : UserControl, interface_UC_SnowCalc
     {
         IPresenterOxyPlot prestnterOxyPlot;
 
+        private List<string> tableNames;
         public ObservableCollection<TempValue> DataListForUpdate = new ObservableCollection<TempValue>();
         private GraphInstal grIn;
 
-        public uc_SnowCalc(IPresenterOxyPlot prestnterOxyPlot)
+        #region реализация интерфейса interface_OxyPlot
+        public string selectedBassein
+        {
+            get
+            {
+                if (rb_bassein.IsChecked == true) { return cmb_StaBassein.SelectedValue.ToString(); }
+                else { return ""; }
+            }
+        }
+
+        public string selectedIndexSta
+        {
+            get
+            {
+                if (rb_meteoSta.IsChecked == true) { return cmb_StaBassein.SelectedValue.ToString(); }
+                else { return ""; }
+            }
+        }
+
+        public DateTime begTime
+        {
+            get
+            {
+                DateTime? date = dp_beginCalc.SelectedDate;
+                if (date != null) { return date.Value; }
+                else { return default(DateTime); }
+            }
+        }
+
+        public DateTime endTime
+        {
+            get {
+                DateTime? date = dp_endCalc.SelectedDate;
+                if (date != null) { return date.Value; }
+                else { return default(DateTime); }
+            }
+        }
+        #endregion реализация интерфейса interface_OxyPlot
+
+
+        public uc_SnowCalc(IPresenterOxyPlot prestnterOxyPlot, ref interface_UC_SnowCalc k)
         {
             this.prestnterOxyPlot = prestnterOxyPlot;
+            k = this;
             InitializeComponent();
+
+            btnRightMenuHide.Click += (s, e) => { MenuButtonHide(); };
+            btnRightMenuShow.Click += (s, e) => { MenuButtonShow(); };
+            but_doCalc.Click += (s, e) => { prestnterOxyPlot.SnowFormation(); };
+
             grid_FrMelFunk.CellEditEnding += Grid_FrMelFunk_CellEditEnding;
             cmb_basseinIndex.SelectionChanged += IndexComboboxChanged;
             cmb_FrozingMelting.SelectionChanged += IndexComboboxChanged;
+
             grid_FrMelFunk.DataContext = DataListForUpdate;
             UpdateComboBoxes();
         }
+
+
+        #region МенюСправа
+        public void MenuButtonHide()
+        {
+            ShowHideMenu("sbHideRightMenu", btnRightMenuHide, btnRightMenuShow, infoRightMenu);
+        }
+        public void MenuButtonShow()
+        {
+            ShowHideMenu("sbShowRightMenu", btnRightMenuHide, btnRightMenuShow, infoRightMenu);
+        }
+        private void ShowHideMenu(string Storyboard, Button btnHide, Button btnShow, StackPanel pnl)
+        {
+            Storyboard sb = Resources[Storyboard] as Storyboard;
+            sb.Begin(pnl);
+
+            if (Storyboard.Contains("Show"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Visible;
+                btnShow.Visibility = System.Windows.Visibility.Hidden;
+            }
+            else if (Storyboard.Contains("Hide"))
+            {
+                btnHide.Visibility = System.Windows.Visibility.Hidden;
+                btnShow.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+        #endregion МенюСлева
+
 
         private void IndexComboboxChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -115,6 +199,23 @@ namespace CRiC_Meteo.Elements
                 grIn.NameY = "скорость стаивания \n снега [мм/час]";
                 grIn.NameSeries = "стаивание";
             }
+        }
+
+        private void meteoSta_Checked(object sender, RoutedEventArgs e)
+        {
+            if (tableNames==null)
+            {
+                tableNames = new List<string>();
+                tableNames = prestnterOxyPlot.tableNamesFromDataBase;
+            }
+            RadioButton pressed = (RadioButton)sender;
+            cmb_StaBassein.ItemsSource = tableNames;
+        }
+
+        private void bassein_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton pressed = (RadioButton)sender;
+            cmb_StaBassein.ItemsSource = prestnterOxyPlot.lfm.Select(s => s.basseinIndex);
         }
     }
 }

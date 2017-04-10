@@ -6,6 +6,16 @@
              xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
+
+    <UserControl.Resources>
+        <Storyboard x:Key="sbShowRightMenu" >
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,-150,0" To="0,0,0,0" DecelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+        <Storyboard x:Key="sbHideRightMenu">
+            <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="0,0,-150,0" AccelerationRatio=".9" Duration="0:0:1" />
+        </Storyboard>
+    </UserControl.Resources>
+
     <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -28,5 +38,25 @@
         <oxy:PlotView Model="{Binding Model}" Name="oxyPlot1" Grid.Column="0" Grid.Row="1"/>
         <oxy:PlotView Grid.Row="0" Grid.Column="1" Model="{Binding Model}" Name="oxyPlot2" MinWidth="100"/>
         <DataGrid Grid.Row="1" Grid.Column="1" Name="grid_SnowCalc" AutoGenerateColumns="False"></DataGrid>
+        <StackPanel Panel.ZIndex="2" Name="infoRightMenu" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,-150,0" Background="Brown" Grid.Row="0" Grid.Column="1">
+
+            <Grid>
+                <Button Name="btnRightMenuHide" Width="20" VerticalAlignment="Stretch" Content="&gt;&gt;" Visibility="Hidden"/>
+                <Button Name="btnRightMenuShow" Width="20" VerticalAlignment="Stretch" Content="&lt;&lt;"/>
+            </Grid>
+
+            <Border BorderBrush="#AF1719" BorderThickness="1" Width="150" Background="#4C808080" >
+                <StackPanel Width="150">
+                    <RadioButton Name="rb_meteoSta" Margin="5" Checked="meteoSta_Checked">Метео станция</RadioButton>
+                    <RadioButton Name="rb_bassein" Margin="5" Checked="bassein_Checked">Бассейн</RadioButton>
+                    <ComboBox Name="cmb_StaBassein" Margin="5"></ComboBox>
+                    <DatePicker Name="dp_beginCalc" Margin="5"></DatePicker>
+                    <DatePicker Name="dp_endCalc" Margin="5"></DatePicker>
+                    <Button Name="but_doCalc" Margin="5" Height="25">Обновить график</Button>
+                </StackPanel>
+            </Border>
+
+
+        </StackPanel>
     </Grid>
 </UserControl>

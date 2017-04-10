@@ -37,7 +37,6 @@
                 <Button Name="btnLeftMenuShow" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Height="25" Content="-&gt;"/>
             </Grid>
         </StackPanel>
-        <!--<StackPanel Name="stP_MyControls" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></StackPanel>-->
         <ContentControl Name="MyUserControl" Grid.RowSpan="2"></ContentControl>
     </Grid>
 </Window>

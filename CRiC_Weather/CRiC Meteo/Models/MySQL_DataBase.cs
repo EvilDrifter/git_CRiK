@@ -17,6 +17,7 @@ namespace CRiC_Meteo.Models
         List<string> tableNames;
         List<Task> allTasks;
         IPresenterDataBase presInterface_worker;
+
         public MySQL_Worker(MySQLDataBaseConfig msConfig, IPresenterDataBase presInterface)
         {
             this.presInterface_worker = presInterface;

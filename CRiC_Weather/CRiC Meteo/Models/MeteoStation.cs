@@ -33,7 +33,19 @@ namespace CRiC_Meteo.Models
 
         public meteoData GetInfoAboutMeteoStaAs_Struct { get { return Info_Struct;} }            //Метод возвращает структуру из List всех метеоданных
         public DataTable GetInfoAboutMeteoStaAs_DataTable { get { return Info_DataTable; } }     //Метод возвращает DataTable с метеоданными
+        public meteoData GetInfoAboutMeteoStaAs_StructFromDataTable(DataTable dt)
+        {
+            setMeteoDataFields();
+            foreach (DataRow d_row in dt.Rows)
+            {
+                Info_Struct.PointTime.Add(Convert.ToDateTime(d_row["Дата"]));
+                Info_Struct.temp_T.Add(Convert.ToDouble(d_row["T - Температура воздуха (C)"]));
+                Info_Struct.precipitation.Add(Convert.ToDouble(d_row["R - Количество осадков (мм)"]));
+            }
+            return Info_Struct;
+        }
 
+        public MeteoStation() { }
         public MeteoStation(DataConstructor curDC)
         {
             this.curDataConstructor = curDC;
