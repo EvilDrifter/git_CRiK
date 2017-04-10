@@ -14,7 +14,8 @@ namespace CRiC_Meteo.Models
         meteoData Info_Struct;
         DataTable Info_DataTable;
         DataConstructor curDataConstructor;
-        int noData = -999;
+        static int noData = -999;
+        public static int emptyValue { get {return noData; }  }
 
         public struct meteoData
         {
