@@ -17,8 +17,8 @@ namespace CRiC_Meteo.Elements
     {
         string selectedBassein { get; }
         string selectedIndexSta { get; }
-        DateTime begTime { get; }
-        DateTime endTime { get; }
+        DateTime begTime { get; set; }
+        DateTime endTime { get; set; }
     }
 
     public class TempValue
@@ -83,6 +83,7 @@ namespace CRiC_Meteo.Elements
                 if (date != null) { return date.Value; }
                 else { return default(DateTime); }
             }
+            set { dp_beginCalc.SelectedDate = value; }
         }
 
         public DateTime endTime
@@ -92,6 +93,7 @@ namespace CRiC_Meteo.Elements
                 if (date != null) { return date.Value; }
                 else { return default(DateTime); }
             }
+            set { dp_endCalc.SelectedDate = value; }
         }
         #endregion реализация интерфейса interface_OxyPlot
 
@@ -112,6 +114,7 @@ namespace CRiC_Meteo.Elements
 
             grid_FrMelFunk.DataContext = DataListForUpdate;
             UpdateComboBoxes();
+            this.prestnterOxyPlot.LoadConfig();
         }
 
 

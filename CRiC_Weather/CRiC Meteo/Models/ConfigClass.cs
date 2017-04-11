@@ -163,6 +163,47 @@ namespace CRiC_Meteo.Models
         }
     }
 
+    [Serializable]
+    public class ConfigForCalc : WR_Xml
+    {
+        private string fileXMLName = "config_forcalc.xml";
+        //public bool rejim_meteostation, rejim_bassein;
+        public DateTime date_start, date_fin;
+        //public string comboboxValue;
+
+        public ConfigForCalc() {}
+        public ConfigForCalc(DateTime date_start, DateTime date_fin)
+        {
+            //this.rejim_bassein = rejim_bassein;
+            //this.rejim_meteostation = rejim_meteostation;
+            //this.comboboxValue = comboboxValue;
+            this.date_start = date_start;
+            this.date_fin = date_fin;
+        }
+
+        public void UpdateXML(ConfigForCalc calcConfig)
+        {
+            base.UpdateXMLFile(calcConfig, fileXMLName);
+        }
+        public ConfigForCalc ReadXML()
+        {
+            ConfigForCalc calcConfig = new ConfigForCalc();
+            if (!File.Exists(fileXMLName))
+            {
+                UpdateXML(new ConfigForCalc(new DateTime(2016, 1, 1), new DateTime(2016, 4, 1)));
+            }
+            base.ReadXMLFile(ref calcConfig, fileXMLName);
+
+            //this.rejim_bassein = calcConfig.rejim_bassein;
+            //this.rejim_meteostation = calcConfig.rejim_meteostation;
+            //this.comboboxValue = calcConfig.comboboxValue;
+            this.date_start = calcConfig.date_start;
+            this.date_fin = calcConfig.date_fin;
+
+            return calcConfig;
+        }
+    }
+
     public abstract class WR_Xml
     {
         public virtual void UpdateXMLFile<T>(T fileToMakeXMLFrom, string fileNameXML)
