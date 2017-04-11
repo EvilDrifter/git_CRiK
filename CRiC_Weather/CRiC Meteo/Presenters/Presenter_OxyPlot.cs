@@ -44,18 +44,27 @@ namespace CRiC_Meteo.Presenters
         public void SnowFormation()
         {
             //SaveConfig();
+            string selectedIndexSta = $"st_{inf_SnC.selectedIndexSta}";
+            string selectedBassein = inf_SnC.selectedBassein;
+            DateTime begTime = inf_SnC.begTime;
+            DateTime endTime = inf_SnC.endTime;
+
             SnowCalc sc = new SnowCalc();
 
             if (inf_SnC.begTime != null && inf_SnC.endTime != null)
             {
                 if (inf_SnC.selectedIndexSta != "")
                 {
+                    
                     DataTable dt = new MySQL_Worker(new MySQLDataBaseConfig().ReadXML()).GetDT_ByIndex(inf_SnC.selectedIndexSta, inf_SnC.begTime, inf_SnC.endTime);
-                    sc.SnowCalcByIndexSta(dt);
+                    int basIndex = Convert.ToUInt16(new MeteoStaionWMO_index().ReadXML().First(s => s.indexWMO == selectedIndexSta).basseinIndex);
+                    BasseinFrozingMelting bfm = lfm.First(s => s.basseinIndex == basIndex);
+                    sc.SnowCalcByIndexSta(dt, bfm);
                 }
                 else if (inf_SnC.selectedBassein != "")
                 {
                     //Расчет снега для всего бассейна
+                    MessageBox.Show("Расчет снега для всего бассейна - еще не написан");
                 }
                 else
                 {
