@@ -52,7 +52,6 @@ namespace CRiC_Meteo.Models
     [Serializable]
     public class MeteoStaionWMO_index
     {
-        //private string fileXMLName = "bassein.xml";
         public string indexWMO;
         public string Name_meteoSta;
         public string basseinIndex;
@@ -146,22 +145,10 @@ namespace CRiC_Meteo.Models
     [Serializable]
     public class BasseinFrozingMelting
     {
-        //private string fileXMLName = "../../XML_configFile/FrozingMelting.xml";
         public int basseinIndex;
         public string basseinName;
         public List<double> meltingT, meltingV;
         public List<double> frozintT, frozingPer;
-
-        //public void UpdateXML(List<BasseinFrozingMelting> frmel)
-        //{
-        //    base.UpdateXMLFile(frmel, fileXMLName);
-        //}
-        //public List<BasseinFrozingMelting> ReadXML()
-        //{
-        //    List<BasseinFrozingMelting> frmel = new List<BasseinFrozingMelting>();
-        //    base.ReadXMLFile(ref frmel, fileXMLName);
-        //    return frmel;
-        //}
 
         public static void UpdateXML(List<BasseinFrozingMelting> frmel)
         {
@@ -215,30 +202,6 @@ namespace CRiC_Meteo.Models
             return calcConfig;
         }
     }
-
-    //public abstract class WR_Xml
-    //{
-    //    public virtual void UpdateXMLFile<T>(T fileToMakeXMLFrom, string fileNameXML)
-    //    {
-    //        XmlSerializer formatter = new XmlSerializer(typeof(T));
-    //        {
-    //            using (FileStream fs = new FileStream(fileNameXML, FileMode.OpenOrCreate))
-    //            {
-    //                formatter.Serialize(fs, fileToMakeXMLFrom);
-    //            }
-    //        }
-    //    }
-
-    //    public virtual void ReadXMLFile<T> (ref T fileToMakeXMLFrom, string fileNameXML)
-    //    {
-    //        XmlSerializer formatter = new XmlSerializer(typeof(T));
-    //        using (FileStream fs = new FileStream(fileNameXML, FileMode.Open))
-    //        {
-    //            fileToMakeXMLFrom = (T)formatter.Deserialize(fs);
-    //        }
-    //    }
-    //}
-
 
     public static class WR_Xml
     {

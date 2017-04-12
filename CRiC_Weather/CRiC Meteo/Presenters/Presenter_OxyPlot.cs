@@ -41,7 +41,7 @@ namespace CRiC_Meteo.Presenters
         public void SnowFormation()
         {
             //SaveConfig();
-            string selectedIndexSta = $"st_{inf_SnC.selectedIndexSta}";
+            string selectedIndexSta = inf_SnC.selectedIndexSta;
             string selectedBassein = inf_SnC.selectedBassein;
             DateTime begTime = inf_SnC.begTime;
             DateTime endTime = inf_SnC.endTime;
@@ -54,9 +54,10 @@ namespace CRiC_Meteo.Presenters
                 {
                     
                     DataTable dt = new MySQL_Worker(new MySQLDataBaseConfig().ReadXML()).GetDT_ByIndex(inf_SnC.selectedIndexSta, inf_SnC.begTime, inf_SnC.endTime);
-                    int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => s.indexWMO == selectedIndexSta).basseinIndex);
+                    int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => $"st_{s.indexWMO}" == selectedIndexSta).basseinIndex);
                     BasseinFrozingMelting bfm = lfm.First(s => s.basseinIndex == basIndex);
                     sc.SnowCalcByIndexSta(dt, bfm);
+                    inf_SnC.DrawSnowFormation(sc.MeteoCalcBy12Hours);
                 }
                 else if (inf_SnC.selectedBassein != "")
                 {

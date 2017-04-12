@@ -19,6 +19,7 @@ namespace CRiC_Meteo.Elements
         string selectedIndexSta { get; }
         DateTime begTime { get; set; }
         DateTime endTime { get; set; }
+        void DrawSnowFormation(SnowCalc.StructForCalc t);
     }
 
     public class TempValue
@@ -219,6 +220,11 @@ namespace CRiC_Meteo.Elements
         {
             RadioButton pressed = (RadioButton)sender;
             cmb_StaBassein.ItemsSource = prestnterOxyPlot.lfm.Select(s => s.basseinIndex);
+        }
+
+        void interface_UC_SnowCalc.DrawSnowFormation(SnowCalc.StructForCalc str_fin)
+        {
+            oxyPlot2.Model = OxyPlot_Funk.DrawSnowFormationStation(str_fin);
         }
     }
 }

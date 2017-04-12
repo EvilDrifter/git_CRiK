@@ -36,7 +36,7 @@
             </DataGrid>
         </StackPanel>
         <oxy:PlotView Model="{Binding Model}" Name="oxyPlot1" Grid.Column="0" Grid.Row="1"/>
-        <oxy:PlotView Grid.Row="0" Grid.Column="1" Model="{Binding Model}" Name="oxyPlot2" MinWidth="100"/>
+        <oxy:PlotView Model="{Binding Model}" Name="oxyPlot2" Grid.Column="1" Grid.Row="0"/>
         <DataGrid Grid.Row="1" Grid.Column="1" Name="grid_SnowCalc" AutoGenerateColumns="False"></DataGrid>
         <StackPanel Panel.ZIndex="2" Name="infoRightMenu" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,-150,0" Background="Brown" Grid.Row="0" Grid.Column="1">
 

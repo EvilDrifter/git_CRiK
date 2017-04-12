@@ -43,6 +43,11 @@ namespace CRiC_Meteo.Models
                 Info_Struct.temp_T.Add(Convert.ToDouble(d_row["T - Температура воздуха (C)"]));
                 Info_Struct.precipitation.Add(Convert.ToDouble(d_row["R - Количество осадков (мм)"]));
             }
+            for (int i = 0; i < Info_Struct.PointTime.Count; i++)
+            {
+                if (Info_Struct.temp_T[i] == noData && i > 1) { Info_Struct.temp_T[i] = Info_Struct.temp_T[i - 1]; }
+                else if (Info_Struct.temp_T[i] == noData && i == 1) { Info_Struct.temp_T[i] = 0; }
+            }
             return Info_Struct;
         }
 
