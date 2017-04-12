@@ -25,6 +25,7 @@ namespace CRiC_Meteo
         PresenterDataBase Presenter_DB;
         PresenterBassein Presenter_Bassein;
         Presenter_OxyPlot Presenter_Oxy;
+        Presenter_ConfigPage Presenter_Config;
         public MainWindow()
         {
             InitializeComponent();
@@ -35,9 +36,11 @@ namespace CRiC_Meteo
             Presenter_DB = new PresenterDataBase();
             Presenter_Bassein = new PresenterBassein();
             Presenter_Oxy = new Presenter_OxyPlot();
-            btn_MySQL.Click += (s, e) => { Presenter_DB.ShowUserControl(stP_MyControls); };
-            btn_Bassein.Click += (s, e) => { Presenter_Bassein.ShowUserControl(stP_MyControls); };
-            btn_zg.Click += (s, e) => { Presenter_Oxy.ShowUserControl(stP_MyControls); };
+            Presenter_Config = new Presenter_ConfigPage();
+            btn_MySQL.Click += (s, e) => { Presenter_DB.ShowUserControl(MyUserControl); };
+            btn_Bassein.Click += (s, e) => { Presenter_Bassein.ShowUserControl(MyUserControl); };
+            btn_zg.Click += (s, e) => { Presenter_Oxy.ShowUserControl(MyUserControl); };
+            btn_conf.Click += (s, e) => { Presenter_Config.ShowUserControl(MyUserControl); };
         }
 
         #region МенюСлева

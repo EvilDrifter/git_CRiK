@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<MySQLDataBaseConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <msql_server>localhost</msql_server>
+  <msql_userId>root</msql_userId>
+  <msql_password>123456</msql_password>
+  <msql_DB_name>pogoda</msql_DB_name>
+</MySQLDataBaseConfig>

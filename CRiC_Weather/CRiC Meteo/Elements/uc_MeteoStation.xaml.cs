@@ -66,14 +66,14 @@ namespace CRiC_Meteo.Elements
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            List<BasseinFrozingMelting> frmelList = new List<BasseinFrozingMelting>();
+        //private void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    List<BasseinFrozingMelting> frmelList = new List<BasseinFrozingMelting>();
 
-            BasseinFrozingMelting brm = new BasseinFrozingMelting();
-            brm.UpdateXMLFile(frmelList, "FrozingMelting.xml");
-            List<BasseinFrozingMelting> frmelList3 = new List<BasseinFrozingMelting>();
-            brm.ReadXMLFile(ref frmelList3, "FrozingMelting.xml");
-        }
+        //    BasseinFrozingMelting brm = new BasseinFrozingMelting();
+        //    brm.UpdateXMLFile(frmelList, "FrozingMelting.xml");
+        //    List<BasseinFrozingMelting> frmelList3 = new List<BasseinFrozingMelting>();
+        //    brm.ReadXMLFile(ref frmelList3, "FrozingMelting.xml");
+        //}
     }
 }

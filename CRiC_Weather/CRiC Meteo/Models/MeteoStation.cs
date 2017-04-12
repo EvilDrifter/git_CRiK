@@ -14,7 +14,8 @@ namespace CRiC_Meteo.Models
         meteoData Info_Struct;
         DataTable Info_DataTable;
         DataConstructor curDataConstructor;
-        int noData = -999;
+        static int noData = -999;
+        public static int emptyValue { get {return noData; }  }
 
         public struct meteoData
         {
@@ -33,7 +34,24 @@ namespace CRiC_Meteo.Models
 
         public meteoData GetInfoAboutMeteoStaAs_Struct { get { return Info_Struct;} }            //Метод возвращает структуру из List всех метеоданных
         public DataTable GetInfoAboutMeteoStaAs_DataTable { get { return Info_DataTable; } }     //Метод возвращает DataTable с метеоданными
+        public meteoData GetInfoAboutMeteoStaAs_StructFromDataTable(DataTable dt)
+        {
+            setMeteoDataFields();
+            foreach (DataRow d_row in dt.Rows)
+            {
+                Info_Struct.PointTime.Add(Convert.ToDateTime(d_row["Дата"]));
+                Info_Struct.temp_T.Add(Convert.ToDouble(d_row["T - Температура воздуха (C)"]));
+                Info_Struct.precipitation.Add(Convert.ToDouble(d_row["R - Количество осадков (мм)"]));
+            }
+            for (int i = 0; i < Info_Struct.PointTime.Count; i++)
+            {
+                if (Info_Struct.temp_T[i] == noData && i > 1) { Info_Struct.temp_T[i] = Info_Struct.temp_T[i - 1]; }
+                else if (Info_Struct.temp_T[i] == noData && i == 1) { Info_Struct.temp_T[i] = 0; }
+            }
+            return Info_Struct;
+        }
 
+        public MeteoStation() { }
         public MeteoStation(DataConstructor curDC)
         {
             this.curDataConstructor = curDC;

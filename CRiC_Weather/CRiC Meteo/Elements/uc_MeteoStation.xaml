@@ -22,7 +22,7 @@
                 <TextBox Margin="5" TextAlignment="Center" Name="txbms_Xm"></TextBox>
                 <TextBox Margin="5" TextAlignment="Center" Name="txbms_Ym"></TextBox>
             </StackPanel>
-            <Button Content="Button" Click="Button_Click"/>
+            <Button Content="Button"/>
         </StackPanel>
         <DataGrid Grid.Column="1" Name="dg_OneMeteoStationInfo" AutoGenerateColumns="True" MaxHeight="500">
         </DataGrid>

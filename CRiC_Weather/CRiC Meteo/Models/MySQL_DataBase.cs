@@ -17,6 +17,7 @@ namespace CRiC_Meteo.Models
         List<string> tableNames;
         List<Task> allTasks;
         IPresenterDataBase presInterface_worker;
+
         public MySQL_Worker(MySQLDataBaseConfig msConfig, IPresenterDataBase presInterface)
         {
             this.presInterface_worker = presInterface;
@@ -83,6 +84,10 @@ namespace CRiC_Meteo.Models
         public DataTable GetDT_ByIndex(string index)
         {
             return new MySQL_DataBase(conn_string).GetDataTableByIndex(index);
+        }
+        public DataTable GetDT_ByIndex(string index, DateTime dt_start, DateTime dt_fin)
+        {
+            return new MySQL_DataBase(conn_string).GetDataTableByIndex(index, dt_start.ToString("yyyy-MM-dd HH:mm:ss"), dt_fin.ToString("yyyy-MM-dd HH:mm:ss"));
         }
         public List<string> GetTableList()
         {
@@ -262,6 +267,24 @@ namespace CRiC_Meteo.Models
                 if (this.OpenConnection() == true)
                 {
                     string query = String.Format("SELECT * FROM `{0}`.`{1}` ORDER BY Дата ;", mySQLDB_Name, staIndex);
+                    dTable = new DataTable(staIndex);
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataSet dSet = new DataSet(dTable.TableName);
+                    adapter.FillSchema(dSet, SchemaType.Source);
+                    adapter.Fill(dSet);
+
+                    dTable = dSet.Tables[0];
+                }
+                this.CloseConnection();
+                return dTable;
+            }
+            public DataTable GetDataTableByIndex(string staIndex, string dt_start, string dt_fin)    //Получение одного DataTable из БД между двумя датами в формате "yyyy-MM-dd HH:mm:ss"
+            {
+                DataTable dTable = new DataTable();
+                if (this.OpenConnection() == true)
+                {
+                    string query = String.Format("SELECT * FROM `{0}`.`{1}` WHERE Дата >= '{2}' AND Дата <= '{3}' ORDER BY Дата ;", mySQLDB_Name, staIndex, dt_start, dt_fin);
                     dTable = new DataTable(staIndex);
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
