@@ -31,8 +31,7 @@ namespace CRiC_Meteo.Presenters
         private List<MeteoStaionWMO_index> openXML()
         {
             lms = new List<MeteoStaionWMO_index>();
-            MeteoStaionWMO_index t = new MeteoStaionWMO_index();
-            lms = t.ReadXML();
+            lms = MeteoStaionWMO_index.ReadXML();
             return lms;
         }
 

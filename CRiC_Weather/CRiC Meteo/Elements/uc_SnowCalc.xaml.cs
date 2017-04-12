@@ -163,7 +163,7 @@ namespace CRiC_Meteo.Elements
 
         private void UpdateComboBoxes()
         {
-            cmb_basseinIndex.ItemsSource = prestnterOxyPlot.lfm.Select(s => s.basseinIndex);
+            cmb_basseinIndex.ItemsSource = prestnterOxyPlot.lfm.Select(s => s.basseinName);
             cmb_FrozingMelting.ItemsSource = Enum.GetValues(typeof(FunkFrozingMelting)).Cast<FunkFrozingMelting>();
             cmb_basseinIndex.SelectedItem = 0;
             cmb_FrozingMelting.SelectedItem = 0;
@@ -172,7 +172,7 @@ namespace CRiC_Meteo.Elements
         private void UpdateTableWithFunk()
         {
             int index = cmb_FrozingMelting.SelectedIndex;
-            int index2 = Convert.ToInt16(cmb_basseinIndex.SelectedItem.ToString());
+            int index2 = prestnterOxyPlot.lfm.First(s => s.basseinName == cmb_basseinIndex.SelectedItem.ToString()).basseinIndex; 
             BasseinFrozingMelting t = new BasseinFrozingMelting();
             t = prestnterOxyPlot.lfm.Find(s => s.basseinIndex == index2);
 

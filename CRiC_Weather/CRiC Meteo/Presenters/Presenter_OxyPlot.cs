@@ -26,10 +26,7 @@ namespace CRiC_Meteo.Presenters
 
         public List<BasseinFrozingMelting> lfm
         {
-            get {
-                BasseinFrozingMelting t = new BasseinFrozingMelting();
-                return t.ReadXML();
-                }
+            get { return BasseinFrozingMelting.ReadXML();}
         }
 
         public List<string> tableNamesFromDataBase
@@ -57,7 +54,7 @@ namespace CRiC_Meteo.Presenters
                 {
                     
                     DataTable dt = new MySQL_Worker(new MySQLDataBaseConfig().ReadXML()).GetDT_ByIndex(inf_SnC.selectedIndexSta, inf_SnC.begTime, inf_SnC.endTime);
-                    int basIndex = Convert.ToUInt16(new MeteoStaionWMO_index().ReadXML().First(s => s.indexWMO == selectedIndexSta).basseinIndex);
+                    int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => s.indexWMO == selectedIndexSta).basseinIndex);
                     BasseinFrozingMelting bfm = lfm.First(s => s.basseinIndex == basIndex);
                     sc.SnowCalcByIndexSta(dt, bfm);
                 }

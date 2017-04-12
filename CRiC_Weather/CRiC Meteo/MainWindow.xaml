@@ -26,10 +26,12 @@
                         <RowDefinition Height="50"></RowDefinition>
                         <RowDefinition Height="50"></RowDefinition>
                         <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Button Name="btn_MySQL" Grid.Row="0" Grid.Column="0" Background="Brown">MySQL</Button>
                     <Button Name="btn_Bassein" Grid.Row="1" Grid.Column="0" Background="Chocolate">Бассейн</Button>
                     <Button Name="btn_zg" Grid.Row="2" Grid.Column="0" Background="Chocolate">ZG</Button>
+                    <Button Name="btn_conf" Grid.Row="3" Grid.Column="0" Background="red">Config</Button>
                 </Grid>
             </Border>
             <Grid>
