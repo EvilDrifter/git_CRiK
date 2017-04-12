@@ -58,6 +58,7 @@ namespace CRiC_Meteo.Presenters
                     BasseinFrozingMelting bfm = lfm.First(s => s.basseinIndex == basIndex);
                     sc.SnowCalcByIndexSta(dt, bfm);
                     inf_SnC.DrawSnowFormation(sc.MeteoCalcBy12Hours);
+                    inf_SnC.ShowToGridSnowFormation(sc.MeteoCalcBy12Hours_DT);
                 }
                 else if (inf_SnC.selectedBassein != "")
                 {
