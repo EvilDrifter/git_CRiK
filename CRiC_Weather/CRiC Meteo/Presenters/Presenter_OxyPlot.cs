@@ -56,7 +56,12 @@ namespace CRiC_Meteo.Presenters
                     DataTable dt = new MySQL_Worker(new MySQLDataBaseConfig().ReadXML()).GetDT_ByIndex(inf_SnC.selectedIndexSta, inf_SnC.begTime, inf_SnC.endTime);
                     int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => $"st_{s.indexWMO}" == selectedIndexSta).basseinIndex);
                     BasseinFrozingMelting bfm = lfm.First(s => s.basseinIndex == basIndex);
-                    sc.SnowCalcByIndexSta(dt, bfm);
+
+                    alglib.spline1dinterpolant s_formation, s_melting;
+                    alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
+                    alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
+
+                    sc.SnowCalcByIndexSta(dt, s_formation, s_melting);
                     inf_SnC.DrawSnowFormation(sc.MeteoCalcBy12Hours);
                     inf_SnC.ShowToGridSnowFormation(sc.MeteoCalcBy12Hours_DT);
                 }

@@ -30,7 +30,7 @@ namespace CRiC_Meteo.Models
         public DataTable MeteoCalcBy12Hours_DT { get { return CreateDataTable(); } }
 
         MeteoStation.meteoData meteoDataAsList;
-        public void SnowCalcByIndexSta(DataTable dt, BasseinFrozingMelting bfm)
+        public void SnowCalcByIndexSta(DataTable dt, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting)
         {
             //PointTime     - "Дата"
             //temp_T        - "T - Температура воздуха (C)"
@@ -44,7 +44,14 @@ namespace CRiC_Meteo.Models
             SeparateDataBy_12_hours(ref str3_15, 3, 15);
             SeparateDataBy_12_hours(ref str6_18, 6, 18);
             CombineStruct(str3_15, str6_18, ref str_fin);
-            CalcSnowFormation(ref str_fin, bfm);  
+            //CalcSnowFormation(ref str_fin, s_formation, s_melting);
+        }
+
+        public void SnowCalcByBassein(List<DataTable> dt, BasseinFrozingMelting bfm)
+        {
+            alglib.spline1dinterpolant s_formation, s_melting;
+            alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
+            alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
         }
 
         private void SeparateDataBy_12_hours(ref StructForCalc str, int h1, int h2)
@@ -153,38 +160,35 @@ namespace CRiC_Meteo.Models
                 }
             }
         }
-        private void CalcSnowFormation(ref StructForCalc str_f, BasseinFrozingMelting bfm)
-        {
-            str_f.snowData = new List<double>();
-            double maxFrP = bfm.frozingPer[bfm.frozingPer.Count - 1];
-            double maxMeV = bfm.meltingV[bfm.meltingV.Count - 1];
-            alglib.spline1dinterpolant s_formation, s_melting;
-            alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
-            alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
+        //private void CalcSnowFormation(ref StructForCalc str_f, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting)
+        //{
+        //    str_f.snowData = new List<double>();
+        //    double maxFrP = bfm.frozingPer[bfm.frozingPer.Count - 1];
+        //    double maxMeV = bfm.meltingV[bfm.meltingV.Count - 1];
 
-            double frSn=0, melSn=0;
-            for (int i = 0; i < str_f.pointTime_f.Count; i++)
-            {
-                if (str_f.temp_T[i]<=bfm.frozintT[0] && str_f.precipitation[i]!=0)
-                {
-                    frSn = 0.01*alglib.spline1dcalc(s_formation, str_f.temp_T[i])*str_f.precipitation[i];
-                    if (frSn > maxFrP) { frSn = maxFrP; }
-                }
-                else { frSn = 0; }
+        //    double frSn=0, melSn=0;
+        //    for (int i = 0; i < str_f.pointTime_f.Count; i++)
+        //    {
+        //        if (str_f.temp_T[i]<=bfm.frozintT[0] && str_f.precipitation[i]!=0)
+        //        {
+        //            frSn = 0.01*alglib.spline1dcalc(s_formation, str_f.temp_T[i])*str_f.precipitation[i];
+        //            if (frSn > maxFrP) { frSn = maxFrP; }
+        //        }
+        //        else { frSn = 0; }
 
-                if (str_f.temp_T[i]>=bfm.meltingT[0])
-                {
-                    melSn = alglib.spline1dcalc(s_melting, str_f.temp_T[i])*(str_f.pointTime_f[i]-str_f.pointTime_b[i]).TotalHours;
-                    if (melSn > maxMeV) { frSn = maxMeV; }
-                }
-                else { melSn = 0; }
+        //        if (str_f.temp_T[i]>=bfm.meltingT[0])
+        //        {
+        //            melSn = alglib.spline1dcalc(s_melting, str_f.temp_T[i])*(str_f.pointTime_f[i]-str_f.pointTime_b[i]).TotalHours;
+        //            if (melSn > maxMeV) { frSn = maxMeV; }
+        //        }
+        //        else { melSn = 0; }
 
-                if (i>1) { str_f.snowData.Add(str_f.snowData[i - 1] + frSn - melSn); }
-                else { str_f.snowData.Add(frSn - melSn); }
+        //        if (i>1) { str_f.snowData.Add(str_f.snowData[i - 1] + frSn - melSn); }
+        //        else { str_f.snowData.Add(frSn - melSn); }
 
-                if (str_f.snowData[i]<0) { str_f.snowData[i] = 0; }
-            }
-        }
+        //        if (str_f.snowData[i]<0) { str_f.snowData[i] = 0; }
+        //    }
+        //}
         private DataTable CreateDataTable()
         {
             DataTable str_fDT = new DataTable();

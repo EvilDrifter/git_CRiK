@@ -232,7 +232,6 @@ namespace CRiC_Meteo.Elements
         void interface_UC_SnowCalc.ShowToGridSnowFormation(DataTable dt)
         {
             grid_SnowCalc.ItemsSource = dt.DefaultView;
-
         }
     }
 }
