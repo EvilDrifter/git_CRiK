@@ -8,6 +8,7 @@ using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 using System.Windows;
 using System.Collections.Generic;
+using System.Data;
 
 namespace CRiC_Meteo.Elements
 {
@@ -19,7 +20,8 @@ namespace CRiC_Meteo.Elements
         string selectedIndexSta { get; }
         DateTime begTime { get; set; }
         DateTime endTime { get; set; }
-        void DrawSnowFormation(SnowCalc.StructForCalc t);
+        void DrawSnowFormation(SnowCalc.StructForCalc sfc);
+        void ShowToGridSnowFormation(DataTable dt);
     }
 
     public class TempValue
@@ -58,7 +60,7 @@ namespace CRiC_Meteo.Elements
         private GraphInstal grIn;
 
         #region реализация интерфейса interface_OxyPlot
-        public string selectedBassein
+        string interface_UC_SnowCalc.selectedBassein
         {
             get
             {
@@ -67,7 +69,7 @@ namespace CRiC_Meteo.Elements
             }
         }
 
-        public string selectedIndexSta
+        string interface_UC_SnowCalc.selectedIndexSta
         {
             get
             {
@@ -76,7 +78,7 @@ namespace CRiC_Meteo.Elements
             }
         }
 
-        public DateTime begTime
+        DateTime interface_UC_SnowCalc.begTime
         {
             get
             {
@@ -87,7 +89,7 @@ namespace CRiC_Meteo.Elements
             set { dp_beginCalc.SelectedDate = value; }
         }
 
-        public DateTime endTime
+        DateTime interface_UC_SnowCalc.endTime
         {
             get {
                 DateTime? date = dp_endCalc.SelectedDate;
@@ -225,6 +227,11 @@ namespace CRiC_Meteo.Elements
         void interface_UC_SnowCalc.DrawSnowFormation(SnowCalc.StructForCalc str_fin)
         {
             oxyPlot2.Model = OxyPlot_Funk.DrawSnowFormationStation(str_fin);
+        }
+
+        void interface_UC_SnowCalc.ShowToGridSnowFormation(DataTable dt)
+        {
+            grid_SnowCalc.ItemsSource = dt.DefaultView;
         }
     }
 }

@@ -27,9 +27,10 @@ namespace CRiC_Meteo.Models
         }
         StructForCalc str3_15, str6_18, str_fin;
         public StructForCalc MeteoCalcBy12Hours { get { return str_fin; } }
+        public DataTable MeteoCalcBy12Hours_DT { get { return CreateDataTable(); } }
 
         MeteoStation.meteoData meteoDataAsList;
-        public void SnowCalcByIndexSta(DataTable dt, BasseinFrozingMelting bfm)
+        public void SnowCalcByIndexSta(DataTable dt, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting)
         {
             //PointTime     - "Дата"
             //temp_T        - "T - Температура воздуха (C)"
@@ -43,13 +44,20 @@ namespace CRiC_Meteo.Models
             SeparateDataBy_12_hours(ref str3_15, 3, 15);
             SeparateDataBy_12_hours(ref str6_18, 6, 18);
             CombineStruct(str3_15, str6_18, ref str_fin);
-            CalcSnowFormation(ref str_fin, bfm);  
+            //CalcSnowFormation(ref str_fin, s_formation, s_melting);
+        }
+
+        public void SnowCalcByBassein(List<DataTable> dt, BasseinFrozingMelting bfm)
+        {
+            alglib.spline1dinterpolant s_formation, s_melting;
+            alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
+            alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
         }
 
         private void SeparateDataBy_12_hours(ref StructForCalc str, int h1, int h2)
         {
             int monthIndex = 0;
-            int k = 0; //Переменная для обратного счета на 12 часов
+            int k = -1; //Переменная для обратного счета на 12 часов
             int index12=-1;
             double numerator=0, denominator=0; //числитель и знаменатель для определения средневзвешенной температуры за период;
 
@@ -62,7 +70,7 @@ namespace CRiC_Meteo.Models
                     str.pointTime_f.Add(meteoDataAsList.PointTime[i]);
                     k = i;
 
-                    if (meteoDataAsList.precipitation[i]!=MeteoStation.emptyValue || meteoDataAsList.precipitation[i]>30)
+                    if (meteoDataAsList.precipitation[i] != MeteoStation.emptyValue || meteoDataAsList.precipitation[i] > 30)
                     {
                         str.precipitation.Add(meteoDataAsList.precipitation[i]);
                     }
@@ -78,25 +86,27 @@ namespace CRiC_Meteo.Models
                         monthIndex = meteoDataAsList.PointTime[i].Month;
                         str.monthIndex.Add($"{meteoDataAsList.PointTime[i].Year}_{monthIndex.ToString("00")}");
                     }
-                }
 
-                if (k != 0)
-                {
-                    numerator = 0;
-                    denominator = 0;
-                    do
+                    if (k > 1)
+                    { 
+                        numerator = 0;
+                        denominator = 0;
+                        do
+                        {
+                            numerator += meteoDataAsList.temp_T[k] * (meteoDataAsList.PointTime[k] - meteoDataAsList.PointTime[k - 1]).TotalHours;
+                            denominator += (meteoDataAsList.PointTime[k] - meteoDataAsList.PointTime[k - 1]).TotalHours;
+                            k--;
+                        } while ((meteoDataAsList.PointTime[k] >= str.pointTime_b[index12]) && k > 0);
+                    }
+                    else if (k==0)
                     {
-                        numerator += meteoDataAsList.temp_T[k]*(meteoDataAsList.PointTime[k]- meteoDataAsList.PointTime[k-1]).TotalHours;
-                        denominator += (meteoDataAsList.PointTime[k] - meteoDataAsList.PointTime[k - 1]).TotalHours;
-                        k--;
-                    } while ((meteoDataAsList.PointTime[k]>= str.pointTime_b[index12]) && k>0);
+                        numerator = meteoDataAsList.temp_T[k];
+                        denominator = 1;
+                    }
 
                     if (denominator != 0) {str.temp_T.Add(numerator / denominator); }
                     else {str.temp_T.Add(meteoDataAsList.temp_T[i]); }
-                    k = 0;
                 }
-
-
             }
         }
         private void CombineStruct(StructForCalc str3_15, StructForCalc str6_18, ref StructForCalc str_f)
@@ -150,37 +160,64 @@ namespace CRiC_Meteo.Models
                 }
             }
         }
-        private void CalcSnowFormation(ref StructForCalc str_f, BasseinFrozingMelting bfm)
+        //private void CalcSnowFormation(ref StructForCalc str_f, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting)
+        //{
+        //    str_f.snowData = new List<double>();
+        //    double maxFrP = bfm.frozingPer[bfm.frozingPer.Count - 1];
+        //    double maxMeV = bfm.meltingV[bfm.meltingV.Count - 1];
+
+        //    double frSn=0, melSn=0;
+        //    for (int i = 0; i < str_f.pointTime_f.Count; i++)
+        //    {
+        //        if (str_f.temp_T[i]<=bfm.frozintT[0] && str_f.precipitation[i]!=0)
+        //        {
+        //            frSn = 0.01*alglib.spline1dcalc(s_formation, str_f.temp_T[i])*str_f.precipitation[i];
+        //            if (frSn > maxFrP) { frSn = maxFrP; }
+        //        }
+        //        else { frSn = 0; }
+
+        //        if (str_f.temp_T[i]>=bfm.meltingT[0])
+        //        {
+        //            melSn = alglib.spline1dcalc(s_melting, str_f.temp_T[i])*(str_f.pointTime_f[i]-str_f.pointTime_b[i]).TotalHours;
+        //            if (melSn > maxMeV) { frSn = maxMeV; }
+        //        }
+        //        else { melSn = 0; }
+
+        //        if (i>1) { str_f.snowData.Add(str_f.snowData[i - 1] + frSn - melSn); }
+        //        else { str_f.snowData.Add(frSn - melSn); }
+
+        //        if (str_f.snowData[i]<0) { str_f.snowData[i] = 0; }
+        //    }
+        //}
+        private DataTable CreateDataTable()
         {
-            str_f.snowData = new List<double>();
-            double maxFrP = bfm.frozingPer[bfm.frozingPer.Count - 1];
-            double maxMeV = bfm.meltingV[bfm.meltingV.Count - 1];
-            alglib.spline1dinterpolant s_formation, s_melting;
-            alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
-            alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
+            DataTable str_fDT = new DataTable();
+            DataColumn[] d_col = new DataColumn[5];
+            DataRow d_row;
+            d_col[0] = new DataColumn("ДатаН", typeof(System.DateTime));
+            d_col[1] = new DataColumn("ДатаК", typeof(System.DateTime));
+            d_col[2] = new DataColumn("Температура воздуха (C)", typeof(System.Decimal));
+            d_col[3] = new DataColumn("Количество осадков (мм)", typeof(System.Decimal));
+            d_col[4] = new DataColumn("Вода в снеге (мм)", typeof(System.Decimal));
 
-            double frSn=0, melSn=0;
-            for (int i = 0; i < str_f.pointTime_f.Count; i++)
+            for (int i = 0; i < d_col.Length; i++)
             {
-                if (str_f.temp_T[i]<=bfm.frozintT[0] && str_f.precipitation[i]!=0)
-                {
-                    frSn = 0.01*alglib.spline1dcalc(s_formation, str_f.temp_T[i])*str_f.precipitation[i];
-                    if (frSn > maxFrP) { frSn = maxFrP; }
-                }
-                else { frSn = 0; }
-
-                if (str_f.temp_T[i]>=bfm.meltingT[0])
-                {
-                    melSn = alglib.spline1dcalc(s_melting, str_f.temp_T[i])*(str_f.pointTime_f[i]-str_f.pointTime_b[i]).TotalHours;
-                    if (melSn > maxMeV) { frSn = maxMeV; }
-                }
-                else { melSn = 0; }
-
-                if (i>1) { str_f.snowData.Add(str_f.snowData[i - 1] + frSn - melSn); }
-                else { str_f.snowData.Add(frSn - melSn); }
-
-                if (str_f.snowData[i]<0) { str_f.snowData[i] = 0; }
+                str_fDT.Columns.Add(d_col[i]);
             }
+
+            for (int i = 0; i < str_fin.pointTime_f.Count; i++)
+            {
+                d_row = str_fDT.NewRow();
+                d_row["ДатаН"] = str_fin.pointTime_b[i];
+                d_row["ДатаК"] = str_fin.pointTime_f[i];
+                d_row["Температура воздуха (C)"] = str_fin.temp_T[i];
+                d_row["Количество осадков (мм)"] = str_fin.precipitation[i];
+                d_row["Вода в снеге (мм)"] = str_fin.snowData[i];
+
+                str_fDT.Rows.Add(d_row);
+            }
+
+            return str_fDT;
         }
 
         private void MergeTwoStruct(StructForCalc str, ref StructForCalc str_f, string year_month)
