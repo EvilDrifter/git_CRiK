@@ -55,9 +55,9 @@ namespace CRiC_Meteo.Models
         public string indexWMO;
         public string Name_meteoSta;
         public int basseinIndex;
-        public string location_Xm, location_Ym;
+        public double location_Xm, location_Ym;
 
-        public MeteoStaionWMO_index(string index, string name, int bassein, string Xm, string Ym)
+        public MeteoStaionWMO_index(string index, string name, int bassein, double Xm, double Ym)
         {
             this.indexWMO = index;
             this.Name_meteoSta = name;
@@ -161,6 +161,28 @@ namespace CRiC_Meteo.Models
             return frmel;
         }
     }
+
+    [Serializable]
+    public class SnowCalcValue
+    {
+        public string indexWMO_DB;
+        public int basseinIndex;
+        public double location_Xm, location_Ym;
+        public double snowValue;
+        public DateTime pointT;
+
+        public static void UpdateXML(List<SnowCalcValue> scv, string fileNameXML)
+        {
+            WR_Xml.UpdateXMLFile(scv, $"../../XML_snowCalc/{fileNameXML}.xml");
+        }
+        public static List<SnowCalcValue> ReadXML(string fileNameXML)
+        {
+            List<SnowCalcValue> scv = new List<SnowCalcValue>();
+            WR_Xml.ReadXMLFile(ref scv, $"../../XML_snowCalc/{fileNameXML}.xml");
+            return scv;
+        }
+    }
+
 
     [Serializable]
     public class ConfigForCalc

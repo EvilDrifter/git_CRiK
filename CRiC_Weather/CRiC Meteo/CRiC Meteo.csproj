@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ConfigClass.cs" />
+    <Compile Include="Models\MapCalc.cs" />
     <Compile Include="Models\MeteoStation.cs" />
     <Compile Include="Models\MySQL_DataBase.cs" />
     <Compile Include="Models\OxyPlot_Funk.cs" />

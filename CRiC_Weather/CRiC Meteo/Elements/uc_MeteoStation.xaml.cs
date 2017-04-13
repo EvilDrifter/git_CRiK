@@ -49,10 +49,10 @@ namespace CRiC_Meteo.Elements
             curMS_info = ms;
             curMS_DT = dt_ms;
             txbms_name.Text = ms.Name_meteoSta;
-            txbms_wmo.Text = ms.indexWMO;
+            txbms_wmo.Text = ms.indexWMO.ToString();
             txbms_bassein.Text = ms.basseinIndex.ToString();
-            txbms_Xm.Text = ms.location_Xm;
-            txbms_Ym.Text = ms.location_Ym;
+            txbms_Xm.Text = ms.location_Xm.ToString();
+            txbms_Ym.Text = ms.location_Ym.ToString();
 
             if (curMS_DT!=null) {dg_OneMeteoStationInfo.ItemsSource = curMS_DT.DefaultView;}
             else {dg_OneMeteoStationInfo.Items.Clear();}
