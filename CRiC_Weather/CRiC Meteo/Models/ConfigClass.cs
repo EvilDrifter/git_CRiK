@@ -54,10 +54,10 @@ namespace CRiC_Meteo.Models
     {
         public string indexWMO;
         public string Name_meteoSta;
-        public string basseinIndex;
+        public int basseinIndex;
         public string location_Xm, location_Ym;
 
-        public MeteoStaionWMO_index(string index, string name, string bassein, string Xm, string Ym)
+        public MeteoStaionWMO_index(string index, string name, int bassein, string Xm, string Ym)
         {
             this.indexWMO = index;
             this.Name_meteoSta = name;

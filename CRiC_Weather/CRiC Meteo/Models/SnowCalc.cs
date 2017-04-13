@@ -1,12 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-
+using System.Threading.Tasks;
 
 namespace CRiC_Meteo.Models
 {
     public class SnowCalc
     {
+        public SnowCalc(DataTable dt, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting, BasseinFrozingMelting bfm)
+        {
+            this.dt = dt;
+            this.s_formation = s_formation;
+            this.s_melting = s_melting;
+            this.bfm = bfm;
+        }
+
+        DataTable dt;
+        alglib.spline1dinterpolant s_formation, s_melting;
+        BasseinFrozingMelting bfm;
+
         public class StructForCalc
         {
             public List<DateTime> pointTime_b, pointTime_f;
@@ -15,7 +27,7 @@ namespace CRiC_Meteo.Models
             public List<double> precipitationByMonth;
             public List<string> monthIndex;
             public List<double> snowData;
-            public StructForCalc()
+            public StructForCalc(string NewStr)
             {
                 pointTime_b = new List<DateTime>();
                 pointTime_f = new List<DateTime>();
@@ -24,34 +36,27 @@ namespace CRiC_Meteo.Models
                 precipitationByMonth = new List<double>();
                 monthIndex = new List<string>();
             }
+            public StructForCalc() {}
         }
         StructForCalc str3_15, str6_18, str_fin;
-        public StructForCalc MeteoCalcBy12Hours { get { return str_fin; } }
-        public DataTable MeteoCalcBy12Hours_DT { get { return CreateDataTable(); } }
+        private MeteoStation.meteoData meteoDataAsList;
 
-        MeteoStation.meteoData meteoDataAsList;
-        public void SnowCalcByIndexSta(DataTable dt, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting)
+        public StructForCalc SnowCalcByIndexSta()
         {
             //PointTime     - "Дата"
             //temp_T        - "T - Температура воздуха (C)"
             //precipitation - "R - Количество осадков (мм)"
             meteoDataAsList = new MeteoStation().GetInfoAboutMeteoStaAs_StructFromDataTable(dt);
-
-            str3_15 = new StructForCalc();
-            str6_18 = new StructForCalc();
-            str_fin = new StructForCalc();
+            //StructForCalc str3_15, str6_18, str_fin;
+            str3_15 = new StructForCalc("new");
+            str6_18 = new StructForCalc("new");
+            str_fin = new StructForCalc("new");
 
             SeparateDataBy_12_hours(ref str3_15, 3, 15);
             SeparateDataBy_12_hours(ref str6_18, 6, 18);
             CombineStruct(str3_15, str6_18, ref str_fin);
-            //CalcSnowFormation(ref str_fin, s_formation, s_melting);
-        }
-
-        public void SnowCalcByBassein(List<DataTable> dt, BasseinFrozingMelting bfm)
-        {
-            alglib.spline1dinterpolant s_formation, s_melting;
-            alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
-            alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
+            CalcSnowFormation(ref str_fin, s_formation, s_melting, bfm);
+            return str_fin;
         }
 
         private void SeparateDataBy_12_hours(ref StructForCalc str, int h1, int h2)
@@ -124,7 +129,7 @@ namespace CRiC_Meteo.Models
                     allMonth.RemoveAt(i+1);
                 }
                 i++;
-            } while (i<allMonth.Count);
+            } while (i<allMonth.Count-1);
 
             foreach (string item in allMonth)
             {
@@ -160,36 +165,36 @@ namespace CRiC_Meteo.Models
                 }
             }
         }
-        //private void CalcSnowFormation(ref StructForCalc str_f, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting)
-        //{
-        //    str_f.snowData = new List<double>();
-        //    double maxFrP = bfm.frozingPer[bfm.frozingPer.Count - 1];
-        //    double maxMeV = bfm.meltingV[bfm.meltingV.Count - 1];
+        private void CalcSnowFormation(ref StructForCalc str_f, alglib.spline1dinterpolant s_formation, alglib.spline1dinterpolant s_melting, BasseinFrozingMelting bfm)
+        {
+            str_f.snowData = new List<double>();
+            double maxFrP = bfm.frozingPer[bfm.frozingPer.Count - 1];
+            double maxMeV = bfm.meltingV[bfm.meltingV.Count - 1];
 
-        //    double frSn=0, melSn=0;
-        //    for (int i = 0; i < str_f.pointTime_f.Count; i++)
-        //    {
-        //        if (str_f.temp_T[i]<=bfm.frozintT[0] && str_f.precipitation[i]!=0)
-        //        {
-        //            frSn = 0.01*alglib.spline1dcalc(s_formation, str_f.temp_T[i])*str_f.precipitation[i];
-        //            if (frSn > maxFrP) { frSn = maxFrP; }
-        //        }
-        //        else { frSn = 0; }
+            double frSn = 0, melSn = 0;
+            for (int i = 0; i < str_f.pointTime_f.Count; i++)
+            {
+                if (str_f.temp_T[i] <= bfm.frozintT[0] && str_f.precipitation[i] != 0)
+                {
+                    frSn = 0.01 * alglib.spline1dcalc(s_formation, str_f.temp_T[i]) * str_f.precipitation[i];
+                    if (frSn > maxFrP) { frSn = maxFrP; }
+                }
+                else { frSn = 0; }
 
-        //        if (str_f.temp_T[i]>=bfm.meltingT[0])
-        //        {
-        //            melSn = alglib.spline1dcalc(s_melting, str_f.temp_T[i])*(str_f.pointTime_f[i]-str_f.pointTime_b[i]).TotalHours;
-        //            if (melSn > maxMeV) { frSn = maxMeV; }
-        //        }
-        //        else { melSn = 0; }
+                if (str_f.temp_T[i] >= bfm.meltingT[0])
+                {
+                    melSn = alglib.spline1dcalc(s_melting, str_f.temp_T[i]) * (str_f.pointTime_f[i] - str_f.pointTime_b[i]).TotalHours;
+                    if (melSn > maxMeV) { frSn = maxMeV; }
+                }
+                else { melSn = 0; }
 
-        //        if (i>1) { str_f.snowData.Add(str_f.snowData[i - 1] + frSn - melSn); }
-        //        else { str_f.snowData.Add(frSn - melSn); }
+                if (i > 1) { str_f.snowData.Add(str_f.snowData[i - 1] + frSn - melSn); }
+                else { str_f.snowData.Add(frSn - melSn); }
 
-        //        if (str_f.snowData[i]<0) { str_f.snowData[i] = 0; }
-        //    }
-        //}
-        private DataTable CreateDataTable()
+                if (str_f.snowData[i] < 0) { str_f.snowData[i] = 0; }
+            }
+        }
+        public DataTable CreateDataTable(StructForCalc str_fin)
         {
             DataTable str_fDT = new DataTable();
             DataColumn[] d_col = new DataColumn[5];
@@ -241,6 +246,26 @@ namespace CRiC_Meteo.Models
                     break;
                 }
             }
+
+        }
+    }
+
+    public class SnowCalcForBassein
+    {
+        public void SnowCalcByBassein(List<DataTable> dt, BasseinFrozingMelting bfm)
+        {
+            alglib.spline1dinterpolant s_formation, s_melting;
+            alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
+            alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
+
+            List<SnowCalc> strFin = new List<SnowCalc>();
+
+            for (int i = 0; i < dt.Count; i++)
+            {
+                if (dt[i].Rows.Count>0) { strFin.Add(new SnowCalc(dt[i], s_formation, s_melting, bfm));}
+            }
+
+            Parallel.ForEach(strFin, s => { s.SnowCalcByIndexSta(); });
 
         }
     }

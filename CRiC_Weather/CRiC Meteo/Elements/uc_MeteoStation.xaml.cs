@@ -50,7 +50,7 @@ namespace CRiC_Meteo.Elements
             curMS_DT = dt_ms;
             txbms_name.Text = ms.Name_meteoSta;
             txbms_wmo.Text = ms.indexWMO;
-            txbms_bassein.Text = ms.basseinIndex;
+            txbms_bassein.Text = ms.basseinIndex.ToString();
             txbms_Xm.Text = ms.location_Xm;
             txbms_Ym.Text = ms.location_Ym;
 
