@@ -54,7 +54,7 @@ namespace CRiC_Meteo.Presenters
                 {
                     
                     DataTable dt = new MySQL_Worker(new MySQLDataBaseConfig().ReadXML()).GetDT_ByIndex(selectedIndexSta, begTime, endTime);
-                    int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => $"st_{s.indexWMO}" == selectedIndexSta).basseinIndex);
+                    int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => s.indexWMO == selectedIndexSta).basseinIndex);
                     BasseinFrozingMelting bfm = lfm.First(s => s.basseinIndex == basIndex);
 
                     alglib.spline1dinterpolant s_formation, s_melting;
@@ -84,9 +84,9 @@ namespace CRiC_Meteo.Presenters
                         dtt = new DataTable();
                         try
                         {
-                            dtt = new MySQL_Worker(msqlC).GetDT_ByIndex($"st_{item.indexWMO}", begTime, endTime);
+                            dtt = new MySQL_Worker(msqlC).GetDT_ByIndex(item.indexWMO, begTime, endTime);
                             dt.Add(dtt);
-                            dt[i].TableName = $"st_{item.indexWMO}";
+                            dt[i].TableName = item.indexWMO;
                             i++;
                         }
                         catch (Exception){}

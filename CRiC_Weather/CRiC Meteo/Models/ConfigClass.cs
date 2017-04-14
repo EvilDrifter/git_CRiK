@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -76,7 +77,7 @@ namespace CRiC_Meteo.Models
             List<MeteoStaionWMO_index> wmoList = new List<MeteoStaionWMO_index>();
             if (!File.Exists("../../XML_configFile/bassein.xml"))
             {
-                //wmoList = ReadCSVFile(@"d:\GeekBrains\git_CRiK\CRiC_Weather\Bassein.csv");
+                MessageBox.Show("File bassein.xml is missing.\nIt has to be in root folder XML_configFile");
             }
 
             wmoList = new List<MeteoStaionWMO_index>();
@@ -84,19 +85,6 @@ namespace CRiC_Meteo.Models
 
             return wmoList;
         }
-
-        //private List<MeteoStaionWMO_index> ReadCSVFile(string wayToFile)
-        //{
-        //    string[] fileAll = File.ReadAllLines(wayToFile);
-        //    string[] curLine;
-        //    List<MeteoStaionWMO_index> wmo = new List<MeteoStaionWMO_index>();
-        //    for (int i = 0; i < fileAll.Length; i++)
-        //    {
-        //        curLine = fileAll[i].Split(';');
-        //        wmo.Add(new MeteoStaionWMO_index(curLine[0], curLine[1], curLine[2], curLine[3], curLine[4]));
-        //    }
-        //    return wmo;
-        //}
     }
 
     [Serializable]
@@ -161,28 +149,6 @@ namespace CRiC_Meteo.Models
             return frmel;
         }
     }
-
-    [Serializable]
-    public class SnowCalcValue
-    {
-        public string indexWMO_DB;
-        public int basseinIndex;
-        public double location_Xm, location_Ym;
-        public double snowValue;
-        public DateTime pointT;
-
-        public static void UpdateXML(List<SnowCalcValue> scv, string fileNameXML)
-        {
-            WR_Xml.UpdateXMLFile(scv, $"../../XML_snowCalc/{fileNameXML}.xml");
-        }
-        public static List<SnowCalcValue> ReadXML(string fileNameXML)
-        {
-            List<SnowCalcValue> scv = new List<SnowCalcValue>();
-            WR_Xml.ReadXMLFile(ref scv, $"../../XML_snowCalc/{fileNameXML}.xml");
-            return scv;
-        }
-    }
-
 
     [Serializable]
     public class ConfigForCalc

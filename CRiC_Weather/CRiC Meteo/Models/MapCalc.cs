@@ -19,7 +19,7 @@ namespace CRiC_Meteo.Models
 
             public LocalMeteoPoint(string indexWMO, int basseinIndex, double koordMP_X, double koordMP_Y)
             {
-                this.indexWMO = $"st_{indexWMO}";
+                this.indexWMO = indexWMO;
                 this.basseinIndex = basseinIndex;
                 this.koordMP_X = koordMP_X;
                 this.koordMP_Y = koordMP_Y;
@@ -37,8 +37,14 @@ namespace CRiC_Meteo.Models
         double xllcorner, yllcorner;
         int cellsize;
         int[,] basseinFile;
-        double[,] snowFile;
-        List<SnowCalcValue> scvMeteoStation;
+        List<CalculatedValueInMeteoStation> scvMeteoStation;
+        List<CalculatedValueInMapPoint> cMP;
+
+        public MapCalc()
+        {
+            ReadMapFile(@"d:\git_CRiK\CRiC_Weather\CRiC Meteo\XML_snowCalc\Ivan.txt");
+            CalcSnowFile();
+        }
 
         private void ReadMapFile(string WayToMap)
         {
@@ -52,14 +58,14 @@ namespace CRiC_Meteo.Models
             tmpStr = ls[1].Split('\t');
             nrows = Convert.ToInt32(tmpStr[1]);
 
+            tmpStr = ls[4].Split('\t');
+            cellsize = Convert.ToInt32(tmpStr[1]);
+
             tmpStr = ls[2].Split('\t');
             xllcorner = Convert.ToDouble(tmpStr[1]);
 
             tmpStr = ls[3].Split('\t');
-            yllcorner = Convert.ToDouble(tmpStr[1]);
-
-            tmpStr = ls[4].Split('\t');
-            cellsize = Convert.ToInt32(tmpStr[1]);
+            yllcorner = Convert.ToDouble(tmpStr[1]) + (nrows-1) * cellsize;
 
             tmpStr = ls[5].Split('\t');
             NODATA_value = Convert.ToInt32(tmpStr[1]);
@@ -79,48 +85,68 @@ namespace CRiC_Meteo.Models
         private void CalcSnowFile()
         {
             int tmpIndex;
-            snowFile = new double[ncols, nrows];
+            //Получиние списка всех метеостаций из xml файла с координатами и названиями
             List<MeteoStaionWMO_index> lms = MeteoStaionWMO_index.ReadXML();
-            scvMeteoStation = SnowCalcValue.ReadXML("testCalc");
+            //Расчетные данные по каждой метеостанции
+            scvMeteoStation = CalculatedValueInMeteoStation.ReadXML("testCalc");
+            //Пересечеие множества всех метеостанций и множества МС с расчетными данными
             List<LocalMeteoPoint> lmp = new List<LocalMeteoPoint>();
             foreach (MeteoStaionWMO_index item in lms)
             {
-                tmpIndex = scvMeteoStation.FindIndex(s=>s.indexWMO_DB== $"st_{item.indexWMO}");
+                tmpIndex = scvMeteoStation.FindIndex(s=>s.indexWMO_DB== item.indexWMO);
                 if (tmpIndex!=-1) { lmp.Add(new LocalMeteoPoint(item.indexWMO.ToString(), item.basseinIndex, item.location_Xm, item.location_Ym));}
             }
 
+            cMP = new List<CalculatedValueInMapPoint>();
+            for (int i = 0; i < nrows; i++)
+            {
+                for (int j = 0; j < ncols; j++)
+                {
+                    if (basseinFile[i,j]!=NODATA_value)
+                        cMP.Add(new CalculatedValueInMapPoint() { koordMP_Y = yllcorner - i * cellsize, koordMP_X = xllcorner + j * cellsize });
+                }
+            }
+
+            //Parallel.For(0, cMP.Count, delegate (int i) { SnowValueInOnePoint(cMP[i], lmp, 10); });
+
+            foreach (CalculatedValueInMapPoint item in cMP)
+            {
+                SnowValueInOnePoint(item, lmp, 10);
+            }
+
+            CalculatedValueInMapPoint.UpdateXML(cMP, "TestSnowMap");
         }
 
-        private void CalcOneRow(int curRow)
+        private void SnowValueInOnePoint(CalculatedValueInMapPoint pointToCalc, List<LocalMeteoPoint> curLMP, int interpolationKoeff)
         {
-            Parallel.For(0,ncols, SnowValueInOnePoint(curRow,)
-        }
-
-        private double SnowValueInOnePoint(int curColumn, int curRow, List<LocalMeteoPoint> curLMP, int interpolationKoeff)
-        {
-            double value = -1;
-            double fr_Numerator=0, fr_Denominator=0;
+            double fr_Numerator = 0, fr_Denominator = 0;
             double snowMS = 0;
-            double koord_X = cellsize * curColumn + xllcorner;
-            double koord_Y = cellsize * curColumn + yllcorner;
             foreach (LocalMeteoPoint item in curLMP)
             {
-                item.CalcDistance(koord_X, koord_Y);
+                item.CalcDistance(pointToCalc.koordMP_X, pointToCalc.koordMP_Y);
             }
             curLMP = curLMP.OrderBy(o => o.distanceFromPoint).ToList();
 
             for (int i = 0; i <= interpolationKoeff; i++)
             {
+                if (i== curLMP.Count-1)
+                {
+                    break;
+                }
+
                 snowMS = scvMeteoStation.First(s => s.indexWMO_DB == curLMP[i].indexWMO).snowValue;
                 fr_Denominator += 1 / (curLMP[i].distanceFromPoint * curLMP[i].distanceFromPoint);
-                fr_Numerator += snowMS * fr_Denominator;
+                fr_Numerator += snowMS / (curLMP[i].distanceFromPoint * curLMP[i].distanceFromPoint);
             }
 
-            if (fr_Denominator!=0)
+            if (fr_Denominator != 0)
             {
-                value = fr_Numerator / fr_Denominator;
+                pointToCalc.snowValue = fr_Numerator / fr_Denominator;
+                if (pointToCalc.snowValue>9000)
+                {
+                    int a = 5;
+                }
             }
-            return value;
         }
     }
 }

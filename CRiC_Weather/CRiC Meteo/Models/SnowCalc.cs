@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CRiC_Meteo.Models
@@ -40,6 +41,9 @@ namespace CRiC_Meteo.Models
         }
         StructForCalc str3_15, str6_18, str_fin;
         private MeteoStation.meteoData meteoDataAsList;
+
+        public StructForCalc GetStr_fin { get {return str_fin; } }
+        public string GetWMOId { get { return dt.TableName; } }
 
         public StructForCalc SnowCalcByIndexSta()
         {
@@ -265,8 +269,28 @@ namespace CRiC_Meteo.Models
                 if (dt[i].Rows.Count>0) { strFin.Add(new SnowCalc(dt[i], s_formation, s_melting, bfm));}
             }
 
+            
             Parallel.ForEach(strFin, s => { s.SnowCalcByIndexSta(); });
 
+            List<CalculatedValueInMeteoStation> cms = new List<CalculatedValueInMeteoStation>();
+            List<MeteoStaionWMO_index> lms = new List<MeteoStaionWMO_index>();
+            lms = MeteoStaionWMO_index.ReadXML();
+
+            for (int i = 0; i < strFin.Count; i++)
+            {
+                cms.Add(new CalculatedValueInMeteoStation()
+                {
+                    basseinIndex = bfm.basseinIndex,
+                    indexWMO_DB = strFin[i].GetWMOId,
+                    location_Xm = lms.First(s => s.indexWMO == strFin[i].GetWMOId).location_Xm,
+                    location_Ym = lms.First(s => s.indexWMO == strFin[i].GetWMOId).location_Ym,
+                    pointT = strFin[i].GetStr_fin.pointTime_f[50],
+                    snowValue = strFin[i].GetStr_fin.snowData[50],
+                }
+                );
+            }
+
+            CalculatedValueInMeteoStation.UpdateXML(cms, "testCalc");
         }
     }
 }

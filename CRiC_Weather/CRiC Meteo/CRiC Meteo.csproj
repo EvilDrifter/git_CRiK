@@ -121,6 +121,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\CalculatedClass.cs" />
     <Compile Include="Models\ConfigClass.cs" />
     <Compile Include="Models\MapCalc.cs" />
     <Compile Include="Models\MeteoStation.cs" />
