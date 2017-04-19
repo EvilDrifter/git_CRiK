@@ -9,6 +9,7 @@
     <Grid>
         <StackPanel>
             <Button Name="butMeltingFrozing" Width="250" Height="30" HorizontalAlignment="Left" Margin="5" Content="характеристики таяния и накопления снега"></Button>
+            <Button Name="but_TestSnowMapCalc" Width="150" Height="30" HorizontalAlignment="Left" Margin="5">Test Snow Map Calc</Button>
         </StackPanel>
         
     </Grid>

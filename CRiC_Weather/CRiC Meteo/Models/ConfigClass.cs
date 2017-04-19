@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -54,10 +55,10 @@ namespace CRiC_Meteo.Models
     {
         public string indexWMO;
         public string Name_meteoSta;
-        public string basseinIndex;
-        public string location_Xm, location_Ym;
+        public int basseinIndex;
+        public double location_Xm, location_Ym;
 
-        public MeteoStaionWMO_index(string index, string name, string bassein, string Xm, string Ym)
+        public MeteoStaionWMO_index(string index, string name, int bassein, double Xm, double Ym)
         {
             this.indexWMO = index;
             this.Name_meteoSta = name;
@@ -76,7 +77,7 @@ namespace CRiC_Meteo.Models
             List<MeteoStaionWMO_index> wmoList = new List<MeteoStaionWMO_index>();
             if (!File.Exists("../../XML_configFile/bassein.xml"))
             {
-                //wmoList = ReadCSVFile(@"d:\GeekBrains\git_CRiK\CRiC_Weather\Bassein.csv");
+                MessageBox.Show("File bassein.xml is missing.\nIt has to be in root folder XML_configFile");
             }
 
             wmoList = new List<MeteoStaionWMO_index>();
@@ -84,19 +85,6 @@ namespace CRiC_Meteo.Models
 
             return wmoList;
         }
-
-        //private List<MeteoStaionWMO_index> ReadCSVFile(string wayToFile)
-        //{
-        //    string[] fileAll = File.ReadAllLines(wayToFile);
-        //    string[] curLine;
-        //    List<MeteoStaionWMO_index> wmo = new List<MeteoStaionWMO_index>();
-        //    for (int i = 0; i < fileAll.Length; i++)
-        //    {
-        //        curLine = fileAll[i].Split(';');
-        //        wmo.Add(new MeteoStaionWMO_index(curLine[0], curLine[1], curLine[2], curLine[3], curLine[4]));
-        //    }
-        //    return wmo;
-        //}
     }
 
     [Serializable]

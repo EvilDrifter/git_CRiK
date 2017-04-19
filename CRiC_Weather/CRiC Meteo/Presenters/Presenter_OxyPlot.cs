@@ -46,27 +46,54 @@ namespace CRiC_Meteo.Presenters
             DateTime begTime = inf_SnC.begTime;
             DateTime endTime = inf_SnC.endTime;
 
-            SnowCalc sc = new SnowCalc();
+            
 
             if (inf_SnC.begTime != null && inf_SnC.endTime != null)
             {
                 if (inf_SnC.selectedIndexSta != "")
                 {
                     
-                    DataTable dt = new MySQL_Worker(new MySQLDataBaseConfig().ReadXML()).GetDT_ByIndex(inf_SnC.selectedIndexSta, inf_SnC.begTime, inf_SnC.endTime);
-                    int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => $"st_{s.indexWMO}" == selectedIndexSta).basseinIndex);
+                    DataTable dt = new MySQL_Worker(new MySQLDataBaseConfig().ReadXML()).GetDT_ByIndex(selectedIndexSta, begTime, endTime);
+                    int basIndex = Convert.ToUInt16(MeteoStaionWMO_index.ReadXML().First(s => s.indexWMO == selectedIndexSta).basseinIndex);
                     BasseinFrozingMelting bfm = lfm.First(s => s.basseinIndex == basIndex);
 
                     alglib.spline1dinterpolant s_formation, s_melting;
                     alglib.spline1dbuildlinear(bfm.frozintT.ToArray(), bfm.frozingPer.ToArray(), out s_formation);
                     alglib.spline1dbuildlinear(bfm.meltingT.ToArray(), bfm.meltingV.ToArray(), out s_melting);
 
-                    sc.SnowCalcByIndexSta(dt, s_formation, s_melting);
-                    inf_SnC.DrawSnowFormation(sc.MeteoCalcBy12Hours);
-                    inf_SnC.ShowToGridSnowFormation(sc.MeteoCalcBy12Hours_DT);
+                    dt.TableName = selectedIndexSta;
+                    SnowCalc sc = new SnowCalc(dt, s_formation, s_melting, bfm);
+                    SnowCalc.StructForCalc c = new SnowCalc.StructForCalc();
+                    c = sc.SnowCalcByIndexSta();
+                    inf_SnC.DrawSnowFormation(c);
+                    dt = new DataTable();
+                    dt = sc.CreateDataTable(c);
+                    inf_SnC.ShowToGridSnowFormation(dt);
                 }
                 else if (inf_SnC.selectedBassein != "")
                 {
+                    int i = 0;
+                    SnowCalcForBassein cnB = new SnowCalcForBassein();
+                    MySQLDataBaseConfig msqlC = new MySQLDataBaseConfig().ReadXML();;
+                    BasseinFrozingMelting bfm = BasseinFrozingMelting.ReadXML().First(s => s.basseinName == selectedBassein);
+                    List<MeteoStaionWMO_index> st = MeteoStaionWMO_index.ReadXML().Where(s => s.basseinIndex == bfm.basseinIndex).ToList();
+                    List<DataTable> dt = new List<DataTable>();
+                    DataTable dtt;
+                    foreach (MeteoStaionWMO_index item in st)
+                    {
+                        dtt = new DataTable();
+                        try
+                        {
+                            dtt = new MySQL_Worker(msqlC).GetDT_ByIndex(item.indexWMO, begTime, endTime);
+                            dt.Add(dtt);
+                            dt[i].TableName = item.indexWMO;
+                            i++;
+                        }
+                        catch (Exception){}
+                    }
+
+                    cnB.SnowCalcByBassein(dt, bfm);
+
                     //Расчет снега для всего бассейна
                     MessageBox.Show("Расчет снега для всего бассейна - еще не написан");
                 }

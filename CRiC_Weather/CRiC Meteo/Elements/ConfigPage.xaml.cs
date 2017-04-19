@@ -25,6 +25,7 @@ namespace CRiC_Meteo.Elements
         {
             InitializeComponent();
             butMeltingFrozing.Click += ButMeltingFrozing_Click;
+            but_TestSnowMapCalc.Click += SnowCalcMapTest;
         }
 
         private void ButMeltingFrozing_Click(object sender, RoutedEventArgs e)
@@ -46,6 +47,11 @@ namespace CRiC_Meteo.Elements
 
             BasseinFrozingMelting.UpdateXML(bfmT);
 
+        }
+
+        private void SnowCalcMapTest(object sender, RoutedEventArgs e)
+        {
+            MapCalc mc = new MapCalc();
         }
     }
 }

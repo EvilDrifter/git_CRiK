@@ -2,7 +2,7 @@
 <ArrayOfBasseinFrozingMelting xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <BasseinFrozingMelting>
     <basseinIndex>0</basseinIndex>
-    <basseinName>Ivankovskoe</basseinName>
+    <basseinName>VneBasseina</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -50,7 +50,7 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>1</basseinIndex>
-    <basseinName>Rybinskoe i Uglichskoe</basseinName>
+    <basseinName>Ivankovskoe</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -98,7 +98,7 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>2</basseinIndex>
-    <basseinName>Gorkovskoe</basseinName>
+    <basseinName>Rybinskoe i Uglichskoe</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -146,7 +146,7 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>3</basseinIndex>
-    <basseinName>Cheboksarskoe</basseinName>
+    <basseinName>Gorkovskoe</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -194,7 +194,7 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>4</basseinIndex>
-    <basseinName>Kujbyshevskoe</basseinName>
+    <basseinName>Cheboksarskoe</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -242,7 +242,7 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>5</basseinIndex>
-    <basseinName>Saratovskoe</basseinName>
+    <basseinName>Kujbyshevskoe</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -290,7 +290,7 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>6</basseinIndex>
-    <basseinName>Volgogradskoe</basseinName>
+    <basseinName>Saratovskoe</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -338,7 +338,7 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>7</basseinIndex>
-    <basseinName>Kamskoe i Votkinskoe</basseinName>
+    <basseinName>Volgogradskoe</basseinName>
     <meltingT>
       <double>-1</double>
       <double>0</double>
@@ -386,6 +386,54 @@
   </BasseinFrozingMelting>
   <BasseinFrozingMelting>
     <basseinIndex>8</basseinIndex>
+    <basseinName>Kamskoe i Votkinskoe</basseinName>
+    <meltingT>
+      <double>-1</double>
+      <double>0</double>
+      <double>0.5</double>
+      <double>1</double>
+      <double>1.5</double>
+      <double>2</double>
+      <double>4</double>
+      <double>10</double>
+      <double>15</double>
+    </meltingT>
+    <meltingV>
+      <double>0</double>
+      <double>0.03</double>
+      <double>0.08</double>
+      <double>0.16</double>
+      <double>0.24</double>
+      <double>0.33</double>
+      <double>0.51</double>
+      <double>0.7</double>
+      <double>0.72</double>
+    </meltingV>
+    <frozintT>
+      <double>1</double>
+      <double>0.5</double>
+      <double>0</double>
+      <double>-0.6</double>
+      <double>-1.4</double>
+      <double>-3.1</double>
+      <double>-5.2</double>
+      <double>-8</double>
+      <double>-15</double>
+    </frozintT>
+    <frozingPer>
+      <double>0</double>
+      <double>10</double>
+      <double>36</double>
+      <double>66</double>
+      <double>80</double>
+      <double>90</double>
+      <double>95</double>
+      <double>97</double>
+      <double>100</double>
+    </frozingPer>
+  </BasseinFrozingMelting>
+  <BasseinFrozingMelting>
+    <basseinIndex>9</basseinIndex>
     <basseinName>Nizhnekamskoe</basseinName>
     <meltingT>
       <double>-1</double>

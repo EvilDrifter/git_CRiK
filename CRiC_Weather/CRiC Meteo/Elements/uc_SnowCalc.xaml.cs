@@ -221,7 +221,7 @@ namespace CRiC_Meteo.Elements
         private void bassein_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton pressed = (RadioButton)sender;
-            cmb_StaBassein.ItemsSource = prestnterOxyPlot.lfm.Select(s => s.basseinIndex);
+            cmb_StaBassein.ItemsSource = prestnterOxyPlot.lfm.Select(s => s.basseinName);
         }
 
         void interface_UC_SnowCalc.DrawSnowFormation(SnowCalc.StructForCalc str_fin)
