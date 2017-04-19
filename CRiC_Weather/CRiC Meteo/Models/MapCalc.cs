@@ -142,10 +142,10 @@ namespace CRiC_Meteo.Models
             if (fr_Denominator != 0)
             {
                 pointToCalc.snowValue = fr_Numerator / fr_Denominator;
-                if (pointToCalc.snowValue>9000)
-                {
-                    int a = 5;
-                }
+                //if (pointToCalc.snowValue>9000)
+                //{
+                //    int a = 5;
+                //}
             }
         }
     }

@@ -128,6 +128,7 @@
     <Compile Include="Models\MySQL_DataBase.cs" />
     <Compile Include="Models\OxyPlot_Funk.cs" />
     <Compile Include="Models\SnowCalc.cs" />
+    <Compile Include="Models\WeatherDownload.cs" />
     <Compile Include="Models\WeatherForecast.cs" />
     <Compile Include="Presenters\PresenterBassein.cs" />
     <Compile Include="Presenters\PresenterDataBase.cs" />

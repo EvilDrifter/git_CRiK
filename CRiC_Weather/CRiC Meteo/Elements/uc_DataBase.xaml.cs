@@ -17,10 +17,12 @@ using System.Windows.Shapes;
 namespace CRiC_Meteo.Elements
 {
     public delegate void Delegate_UpdateProgressBar(int value_max);
+    public delegate void Delegate_UpdateButton(string value_text);
     public interface interface_UC_DataBase
     {
         void UpdateProgressBar_HTML(int value_max);
         void UpdateProgressBar_SQL(int value_max);
+        void UpdateButton_DownLoadHTML(string value_text);
         string GetFolderWayFromUserControl { get;}
         string GetYearToCalcFromUserControl { get;}
     }
@@ -38,10 +40,15 @@ namespace CRiC_Meteo.Elements
         {
             InitializeComponent();
             this.dbPresenter = dbPresenter;
+
             txb_MainFolderWithMonth.Text = dbPresenter.FolderWithData;
             txb_YearForMeteo.Text = dbPresenter.YearToCalc;
+            txtYearToDownload.Text = dbPresenter.YearToCalc;
+            txt_FolderToDownload.Text = dbPresenter.FolderToDownloadHTML;
+
             bnt_StartProcessWithMySQL.Click += (s, e) => { MainUpdateProcess(); };
             bnt_ShowMonthFolders.Click += (s, e) => { ShowMonthFolder(); };
+            btn_mainStart.Click += (s, e) => { DownLoadHTMLFiles(); };
             k = this;
         }
 
@@ -112,6 +119,15 @@ namespace CRiC_Meteo.Elements
                 return;
             }
         }
+        public void UpdateButton_DownLoadHTML(string valueText)
+        {
+            if (this.Dispatcher.CheckAccess()) { btn_DownloadMeteoData.Content = valueText;}
+            else
+            {
+                btn_DownloadMeteoData.Dispatcher.Invoke(new Delegate_UpdateButton(UpdateButton_DownLoadHTML), valueText);
+                return;
+            }
+        }
 
         private void cmb_FirstLoad(object sender, RoutedEventArgs e)
         {
@@ -131,6 +147,23 @@ namespace CRiC_Meteo.Elements
 
             cmb_Months.ItemsSource = dataForCmb;
             cmb_Months.SelectedIndex = 0;
+        }
+
+        private void DownLoadHTMLFiles()
+        {
+            int monthIndex=-1, yearToDownload=-1;
+            try
+            {
+                monthIndex = cmb_Months.SelectedIndex;
+                yearToDownload = Convert.ToInt32(txtYearToDownload.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"1.Select month\n2.Year has to be like <yyyy>\n\n{ex.Message}");
+            }
+
+            if (monthIndex!=-1 && yearToDownload!=-1) { dbPresenter.DownLoadHTMLFiles(txt_FolderToDownload.Text, monthIndex+1, yearToDownload);}
+            
         }
     }
 }

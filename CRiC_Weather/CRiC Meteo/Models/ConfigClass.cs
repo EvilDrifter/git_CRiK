@@ -16,6 +16,8 @@ namespace CRiC_Meteo.Models
         private string fileXMLName = "../../XML_configFile/config.xml";
         public string FolderWithDataWay { get; set; }
         public int curYearForCalc { get; set; }
+        public string FolderToDownloadHTML { get; set; }
+        public int YearToDownloadHTML { get; set; }
 
         public ConfigClass(string way, int year)
         {

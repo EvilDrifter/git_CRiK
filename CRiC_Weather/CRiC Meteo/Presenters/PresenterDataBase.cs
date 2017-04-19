@@ -13,6 +13,8 @@ namespace CRiC_Meteo.Presenters
     {
         void UpdateForm_PrBarHTMLReader(int MaxValueOfPrBar);  //Обновление Бара для чтения HTML
         void UpdateForm_PrBarSQL(int MaxValueOfPrBar);         //Обновление Бара для записи в БД
+        void DownLoadHTMLFiles(string FolderToDownload, int monthIndex, int yearIndex);
+        void UpdateButtonContextHTMLWork(string textToUpdate);
     }
 
     public class PresenterDataBase: IPresenterDataBase
@@ -24,6 +26,8 @@ namespace CRiC_Meteo.Presenters
         #region Данные
         public string FolderWithData { get; set; }
         public string YearToCalc { get; set; }
+        public string FolderToDownloadHTML { get; set; }
+        public string YearToDownloadHTML { get; set; }
         #endregion Данные
 
         public void ShowUserControl(ContentControl cc)
@@ -39,6 +43,8 @@ namespace CRiC_Meteo.Presenters
             configFile = configFile.ReadXML();
             FolderWithData = configFile.FolderWithDataWay;
             YearToCalc = configFile.curYearForCalc.ToString();
+            FolderToDownloadHTML = configFile.FolderToDownloadHTML;
+            YearToDownloadHTML = configFile.YearToDownloadHTML.ToString();
         }
         public void UpdateConfigFile()
         {
@@ -56,7 +62,15 @@ namespace CRiC_Meteo.Presenters
             Task t = Task.Run(() => Cl_wf.WeatherForecastUpdate_start());
         }
 
-        #region Обновление ProgressBar
+        #region DownLoadHTML
+        public void DownLoadHTMLFiles(string FolderToDownload, int monthIndex, int yearIndex)
+        {
+            WeatherDownload wd = new WeatherDownload(FolderToDownload, monthIndex, yearIndex);
+            Task t = Task.Run(() => wd.StartDownload(this));
+        }
+        #endregion DownLoadHTML
+
+        #region Обновление Элементов формы
         public void UpdateForm_PrBarHTMLReader(int MaxValueOfPrBar)
         {
             interfaceUC_DB.UpdateProgressBar_HTML(MaxValueOfPrBar);
@@ -65,6 +79,10 @@ namespace CRiC_Meteo.Presenters
         {
             interfaceUC_DB.UpdateProgressBar_SQL(MaxValueOfPrBar);
         }
-        #endregion Обновление ProgressBar
+        public void UpdateButtonContextHTMLWork(string downloadedIndex)
+        {
+            interfaceUC_DB.UpdateButton_DownLoadHTML(downloadedIndex);
+        }
+        #endregion Обновление Элементов формы
     }
 }
