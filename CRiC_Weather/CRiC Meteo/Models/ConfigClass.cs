@@ -13,7 +13,7 @@ namespace CRiC_Meteo.Models
     [Serializable]
     public class ConfigClass
     {
-        private string fileXMLName = "../../XML_configFile/config.xml";
+        private string fileXMLName = $"../../../XML_configFile/config.xml";
         public string FolderWithDataWay { get; set; }
         public int curYearForCalc { get; set; }
         public string FolderToDownloadHTML { get; set; }
@@ -72,18 +72,18 @@ namespace CRiC_Meteo.Models
 
         public static void UpdateXML(List<MeteoStaionWMO_index> wmoList)
         {
-            WR_Xml.UpdateXMLFile(wmoList, "../../XML_configFile/bassein.xml");
+            WR_Xml.UpdateXMLFile(wmoList, "../../../XML_configFile/bassein.xml");
         }
         public static List<MeteoStaionWMO_index> ReadXML()
         {
             List<MeteoStaionWMO_index> wmoList = new List<MeteoStaionWMO_index>();
-            if (!File.Exists("../../XML_configFile/bassein.xml"))
+            if (!File.Exists("../../../XML_configFile/bassein.xml"))
             {
                 MessageBox.Show("File bassein.xml is missing.\nIt has to be in root folder XML_configFile");
             }
 
             wmoList = new List<MeteoStaionWMO_index>();
-            WR_Xml.ReadXMLFile(ref wmoList, "../../XML_configFile/bassein.xml");
+            WR_Xml.ReadXMLFile(ref wmoList, "../../../XML_configFile/bassein.xml");
 
             return wmoList;
         }
@@ -92,7 +92,7 @@ namespace CRiC_Meteo.Models
     [Serializable]
     public class MySQLDataBaseConfig
     {
-        private string fileXMLName = "../../XML_configFile/db_mysql_config.xml";
+        private string fileXMLName = "../../../XML_configFile/db_mysql_config.xml";
         public string msql_server;      //localhost
         public string msql_userId;      //root
         public string msql_password;    //123456
@@ -142,12 +142,12 @@ namespace CRiC_Meteo.Models
 
         public static void UpdateXML(List<BasseinFrozingMelting> frmel)
         {
-            WR_Xml.UpdateXMLFile(frmel, "../../XML_configFile/FrozingMelting.xml");
+            WR_Xml.UpdateXMLFile(frmel, "../../../XML_configFile/FrozingMelting.xml");
         }
         public static List<BasseinFrozingMelting> ReadXML()
         {
             List<BasseinFrozingMelting> frmel = new List<BasseinFrozingMelting>();
-            WR_Xml.ReadXMLFile(ref frmel, "../../XML_configFile/FrozingMelting.xml");
+            WR_Xml.ReadXMLFile(ref frmel, "../../../XML_configFile/FrozingMelting.xml");
             return frmel;
         }
     }
@@ -155,7 +155,7 @@ namespace CRiC_Meteo.Models
     [Serializable]
     public class ConfigForCalc
     {
-        private string fileXMLName = "../../XML_configFile/config_forcalc.xml";
+        private string fileXMLName = "../../../XML_configFile/config_forcalc.xml";
         //public bool rejim_meteostation, rejim_bassein;
         public DateTime date_start, date_fin;
         //public string comboboxValue;

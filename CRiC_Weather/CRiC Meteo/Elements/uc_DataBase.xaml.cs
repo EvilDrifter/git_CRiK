@@ -48,7 +48,8 @@ namespace CRiC_Meteo.Elements
 
             bnt_StartProcessWithMySQL.Click += (s, e) => { MainUpdateProcess(); };
             bnt_ShowMonthFolders.Click += (s, e) => { ShowMonthFolder(); };
-            btn_mainStart.Click += (s, e) => { DownLoadHTMLFiles(); };
+            btn_DownloadMeteoData.Click += (s, e) => { DownLoadHTMLFiles(); };
+            btn_CreateFiles.Click += (s, e) => { CreateFilesFromHTML(); };
             k = this;
         }
 
@@ -81,6 +82,7 @@ namespace CRiC_Meteo.Elements
             {
                 var selectedItem = (dynamic)item;
                 string[] OneMonthFiles = System.IO.Directory.GetFiles(selectedItem.pathToMonth);
+                lab_curFolderHTMLRead.Content = "Считывание HTML файлов: " + selectedItem;
                 dbPresenter.view_UpdateWeatherForecast(OneMonthFiles, Convert.ToInt32(txb_YearForMeteo.Text));
             }
         }
@@ -92,6 +94,11 @@ namespace CRiC_Meteo.Elements
                 if (valueMax != prBar_readingHTML.Maximum)
                 {
                     prBar_readingHTML.Maximum = valueMax;
+                }
+                if (valueMax==0)
+                {
+                    prBar_readingHTML.Maximum = valueMax;
+                    prBar_readingHTML.Value = 0;
                 }
                 prBar_readingHTML.Value++;
                 lb_htmlProgress.Content = String.Format("Выполнено {0:F2} %", (prBar_readingHTML.Value * 100) / valueMax);
@@ -109,6 +116,11 @@ namespace CRiC_Meteo.Elements
                 if (valueMax != prBar_updatingMySQL.Maximum)
                 {
                     prBar_updatingMySQL.Maximum = valueMax;
+                }
+                if (valueMax == 0)
+                {
+                    prBar_updatingMySQL.Maximum = valueMax;
+                    prBar_updatingMySQL.Value = 0;
                 }
                 prBar_updatingMySQL.Value++;
                 lb_dbProgress.Content = String.Format("Выполнено {0:F2} %", (prBar_updatingMySQL.Value * 100) / valueMax);
@@ -164,6 +176,11 @@ namespace CRiC_Meteo.Elements
 
             if (monthIndex!=-1 && yearToDownload!=-1) { dbPresenter.DownLoadHTMLFiles(txt_FolderToDownload.Text, monthIndex+1, yearToDownload);}
             
+        }
+
+        private void CreateFilesFromHTML()
+        {
+
         }
     }
 }

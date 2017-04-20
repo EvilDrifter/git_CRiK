@@ -225,7 +225,8 @@ namespace CRiC_Meteo.Models
                                         `Po - Атмосферное давление (гПа)` DECIMAL NULL,
                                         `Tmin - Минимальная температура (C)` DECIMAL NULL,
                                         `Tmax - Максимальная температура (C)` DECIMAL NULL,
-                                        `R - Количество осадков (мм)` DECIMAL NULL,
+                                        `R - Количество осадков 12ч (мм)` DECIMAL NULL,
+                                        `R - Количество осадков 24ч (мм)` DECIMAL NULL,
                                         `S - Снежный покров (см)` INT NULL);", mySQLDB_Name, dt.TableName);
 
                 //MessageBox.Show(mySQLDB_Name + '\t' + dt.TableName);

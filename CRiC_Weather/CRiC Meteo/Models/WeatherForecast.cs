@@ -44,11 +44,13 @@ namespace CRiC_Meteo.Models
             List_DataConstuctor = new List<DataConstructor>();
             UpdateDataFrom_HTML_Files();
 
+            presInterface.UpdateForm_PrBarHTMLReader(0);
             List_MeteoStation = new List<MeteoStation>();
             Task t = Task.Run(() => UpdateDataForEachMeteoStation());
             Task.WaitAll(t);
 
             //Обновление MySQL Базы данных, в скобках - название БД и итерфейс для взаимодействия с главным окном
+            presInterface.UpdateForm_PrBarSQL(0);
             MySQLDataBaseConfig msConfig = new MySQLDataBaseConfig();
             msConfig = msConfig.ReadXML();
             MySQL_Worker msqlW = new MySQL_Worker(msConfig, presInterface);

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ConfigClass xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <FolderWithDataWay>d:\weatherD\2017\</FolderWithDataWay>
+<ConfigClass xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <FolderWithDataWay>d:\weatherD\2016_2017\</FolderWithDataWay>
   <curYearForCalc>2017</curYearForCalc>
   <FolderToDownloadHTML>d:\weatherD\2017\04_апрель\</FolderToDownloadHTML>
   <YearToDownloadHTML>2017</YearToDownloadHTML>

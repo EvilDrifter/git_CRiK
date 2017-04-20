@@ -17,12 +17,12 @@ namespace CRiC_Meteo.Models
 
         public static void UpdateXML(List<CalculatedValueInMeteoStation> scv, string fileNameXML)
         {
-            WR_Xml.UpdateXMLFile(scv, $"../../XML_snowCalc/{fileNameXML}.xml");
+            WR_Xml.UpdateXMLFile(scv, $"~/XML_snowCalc/{fileNameXML}.xml");
         }
         public static List<CalculatedValueInMeteoStation> ReadXML(string fileNameXML)
         {
             List<CalculatedValueInMeteoStation> scv = new List<CalculatedValueInMeteoStation>();
-            WR_Xml.ReadXMLFile(ref scv, $"../../XML_snowCalc/{fileNameXML}.xml");
+            WR_Xml.ReadXMLFile(ref scv, $"~/XML_snowCalc/{fileNameXML}.xml");
             return scv;
         }
     }

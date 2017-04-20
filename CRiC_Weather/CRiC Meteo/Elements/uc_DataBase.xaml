@@ -33,7 +33,7 @@
             <Label>Год:</Label>
             <TextBox Name="txb_YearForMeteo" HorizontalAlignment="Left" Margin="5" Width="50"></TextBox>
             <Button Name="bnt_StartProcessWithMySQL" Margin="20" Width="150" Height="25" Content="Обработать выделенные"></Button>
-            <Label>Считывание HTML файлов</Label>
+            <Label Name="lab_curFolderHTMLRead" Content="Считывание HTML файлов"></Label>
             <Label Name="lb_htmlProgress">Выполнено:</Label>
             <ProgressBar Name="prBar_readingHTML" Height="25" Foreground="#FF01D328"/>
             <Label>Обновление Базы данных:</Label>
@@ -41,7 +41,6 @@
             <ProgressBar Name="prBar_updatingMySQL" Height="25"></ProgressBar>
         </StackPanel>
         <StackPanel Margin="8" Grid.Column="1">
-            <Button Name="btn_mainStart" Width="150" Height="25" HorizontalAlignment="Left" Margin="10" Content="Load Config"></Button>
             <ComboBox Name="cmb_Months" Margin="10" Width="150" Height="25" HorizontalAlignment="Left" Loaded="cmb_FirstLoad"></ComboBox>
             <TextBox Name="txtYearToDownload" Margin="10" Width="50" Height="20" HorizontalAlignment="Left"></TextBox>
             <TextBox Name="txt_FolderToDownload" Margin="10" Height="20"></TextBox>

@@ -27,7 +27,7 @@ namespace CRiC_Meteo.Models
             public List<int> humidity;
             public List<double> temp_Te, temp_Tes;
             public List<string> comfort;
-            public List<double> pressure_P, pressure_P0, temp_Tmin, temp_Tmax, precipitation;
+            public List<double> pressure_P, pressure_P0, temp_Tmin, temp_Tmax, precipitation12, precipitation24;
             public List<int> snow_width;
         }
         #endregion
@@ -41,7 +41,7 @@ namespace CRiC_Meteo.Models
             {
                 Info_Struct.PointTime.Add(Convert.ToDateTime(d_row["Дата"]));
                 Info_Struct.temp_T.Add(Convert.ToDouble(d_row["T - Температура воздуха (C)"]));
-                Info_Struct.precipitation.Add(Convert.ToDouble(d_row["R - Количество осадков (мм)"]));
+                Info_Struct.precipitation12.Add(Convert.ToDouble(d_row["R - Количество осадков 12ч (мм)"]));
             }
             for (int i = 0; i < Info_Struct.PointTime.Count; i++)
             {
@@ -95,7 +95,8 @@ namespace CRiC_Meteo.Models
             Info_Struct.pressure_P0 = new List<double>();
             Info_Struct.temp_Tmin = new List<double>();
             Info_Struct.temp_Tmax = new List<double>();
-            Info_Struct.precipitation = new List<double>();
+            Info_Struct.precipitation12 = new List<double>();
+            Info_Struct.precipitation24 = new List<double>();
             Info_Struct.snow_width = new List<int>();
         }               
 
@@ -115,7 +116,7 @@ namespace CRiC_Meteo.Models
 
             if (start != 0)
             {
-                for (int i = start; i < curDataConstructor.HTMLFile.Length; i = i + 21)
+                for (int i = start; i < curDataConstructor.HTMLFile.Length; i = i + 22)
                 {
                     if (curDataConstructor.HTMLFile[i] == "")
                     {
@@ -124,7 +125,7 @@ namespace CRiC_Meteo.Models
                     curHour = readcurString("<b>", "</b>", curDataConstructor.HTMLFile[i]);
                     curDayYear = readcurString("<b>", "</b>", curDataConstructor.HTMLFile[i + 1]);
 
-                    //Если удачно получилось получить дату, то считывание продолжается, если нет, то пропускается 21 строка
+                    //Если удачно получилось получить дату, то считывание продолжается, если нет, то пропускается 22 строки
                     if (convertToDate(curHour, curDayYear, curDataConstructor.YearOf))
                     {
                         Info_Struct.wind_Direction.Add(readcurString(">", "</td>", curDataConstructor.HTMLFile[i + 2]));
@@ -147,8 +148,9 @@ namespace CRiC_Meteo.Models
                         doubleDataFromString(">", "</td>", curDataConstructor.HTMLFile[i + 14], ref Info_Struct.pressure_P0);
                         doubleDataFromString("<nobr>", "</nobr>", curDataConstructor.HTMLFile[i + 15], ref Info_Struct.temp_Tmin);
                         doubleDataFromString("<nobr>", "</nobr>", curDataConstructor.HTMLFile[i + 16], ref Info_Struct.temp_Tmax);
-                        doubleDataFromString(">", "</td>", curDataConstructor.HTMLFile[i + 17], ref Info_Struct.precipitation);
-                        intDataFromString(">", "</td>", curDataConstructor.HTMLFile[i + 18], ref Info_Struct.snow_width);
+                        doubleDataFromString(">", "</td>", curDataConstructor.HTMLFile[i + 17], ref Info_Struct.precipitation12);
+                        doubleDataFromString(">", "</td>", curDataConstructor.HTMLFile[i + 18], ref Info_Struct.precipitation24);
+                        intDataFromString(">", "</td>", curDataConstructor.HTMLFile[i + 19], ref Info_Struct.snow_width);
                     }
                     else
                     {
@@ -221,7 +223,7 @@ namespace CRiC_Meteo.Models
         private void MakeDataTableFromList()
         {
             string index = System.IO.Path.GetFileNameWithoutExtension(curDataConstructor.FileName);
-            DataColumn[] d_col = new DataColumn[17];
+            DataColumn[] d_col = new DataColumn[18];
             Info_DataTable = new DataTable("st_" + index);
             DataRow d_row;
             d_col[0] = new DataColumn("Дата", typeof(System.DateTime));
@@ -239,8 +241,9 @@ namespace CRiC_Meteo.Models
             d_col[12] = new DataColumn("Po - Атмосферное давление (гПа)", typeof(System.Decimal));
             d_col[13] = new DataColumn("Tmin - Минимальная температура (C)", typeof(System.Decimal));
             d_col[14] = new DataColumn("Tmax - Максимальная температура (C)", typeof(System.Decimal));
-            d_col[15] = new DataColumn("R - Количество осадков (мм)", typeof(System.Decimal));
-            d_col[16] = new DataColumn("S - Снежный покров (см)", typeof(System.Int32));
+            d_col[15] = new DataColumn("R - Количество осадков 12ч (мм)", typeof(System.Decimal));
+            d_col[16] = new DataColumn("R - Количество осадков 24ч (мм)", typeof(System.Decimal));
+            d_col[17] = new DataColumn("S - Снежный покров (см)", typeof(System.Int32));
             for (int i = 0; i < d_col.Length; i++)
             {
                 Info_DataTable.Columns.Add(d_col[i]);
@@ -267,7 +270,8 @@ namespace CRiC_Meteo.Models
                 d_row["Po - Атмосферное давление (гПа)"] = Info_Struct.pressure_P0[i];
                 d_row["Tmin - Минимальная температура (C)"] = Info_Struct.temp_Tmin[i];
                 d_row["Tmax - Максимальная температура (C)"] = Info_Struct.temp_Tmax[i];
-                d_row["R - Количество осадков (мм)"] = Info_Struct.precipitation[i];
+                d_row["R - Количество осадков 12ч (мм)"] = Info_Struct.precipitation12[i];
+                d_row["R - Количество осадков 24ч (мм)"] = Info_Struct.precipitation24[i];
                 d_row["S - Снежный покров (см)"] = Info_Struct.snow_width[i];
 
                 Info_DataTable.Rows.Add(d_row);

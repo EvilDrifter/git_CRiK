@@ -3,5 +3,5 @@
   <msql_server>localhost</msql_server>
   <msql_userId>root</msql_userId>
   <msql_password>123456</msql_password>
-  <msql_DB_name>pogoda</msql_DB_name>
+  <msql_DB_name>pogodanewformat</msql_DB_name>
 </MySQLDataBaseConfig>

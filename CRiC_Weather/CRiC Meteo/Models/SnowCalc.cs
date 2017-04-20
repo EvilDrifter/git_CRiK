@@ -79,9 +79,9 @@ namespace CRiC_Meteo.Models
                     str.pointTime_f.Add(meteoDataAsList.PointTime[i]);
                     k = i;
 
-                    if (meteoDataAsList.precipitation[i] != MeteoStation.emptyValue || meteoDataAsList.precipitation[i] > 30)
+                    if (meteoDataAsList.precipitation12[i] != MeteoStation.emptyValue || meteoDataAsList.precipitation12[i] > 30)
                     {
-                        str.precipitation.Add(meteoDataAsList.precipitation[i]);
+                        str.precipitation.Add(meteoDataAsList.precipitation12[i]);
                     }
                     else { str.precipitation.Add(0); }
 
